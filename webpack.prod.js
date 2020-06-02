@@ -49,6 +49,16 @@ module.exports = {
     resolve: {
         extensions: [".ts", ".tsx", ".js", ".json", ".css"]
     },
+    stats: {
+        warningsFilter: [
+            'Critical dependency: require function is used in a way in which dependencies cannot be statically extracted',
+            'Failed to parse source map',
+        ]
+    },
+    performance: {
+        maxAssetSize: 30*1024*1024,
+        maxEntrypointSize: 1*1024*1024,
+    },
     plugins: [
         new CopyPlugin({
             patterns: [

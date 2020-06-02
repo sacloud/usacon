@@ -1,8 +1,8 @@
 {
-  "name": "Sacloud Console",
+  "name": "UsaCon",
   "manifest_version": 2,
   "version": "0.1.0",
-  "description": "A Google Chrome extension to use CLI for SakuraCloud in the control panel",
+  "description": "A browser extension for using SakuraCloud CLI in the control panel",
   "icons": {
     "128": "icon_128.png"
   },
@@ -10,12 +10,15 @@
   "content_scripts" : [
     {
       "matches": [ "https://secure.sakura.ad.jp/cloud/iaas*" ],
-      "js": ["/static/js/content_script.js"]
+      "js": ["content.bundle.js"]
     }
   ],
   "browser_action": {
     "default_icon": "icon_128.png",
-    "default_popup": "index.html",
-    "default_title": "Sacloud Console"
-  }
+    "default_popup": "popup.html",
+    "default_title": "UsaCon"
+  },
+  "web_accessible_resources": [
+    "usacloud.wasm"
+  ]
 }

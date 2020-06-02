@@ -1,15 +1,15 @@
 {
-  "name": "chrome-sacloud-console",
+  "name": "usacon",
   "version": "0.1.0",
-  "description": "A Google Chrome extension to use CLI for SakuraCloud in the control panel",
+  "description": "A browser extension for using SakuraCloud CLI in the control panel",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/sacloud/chrome-sacloud-console.git"
+    "url": "https://github.com/sacloud/usacon.git"
   },
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "author": {
-    "name": "the chrome-sacloud-console authors",
+    "name": "The UsaCon Authors",
     "url": "https://github.com/sacloud"
   },
   "dependencies": {
@@ -20,16 +20,26 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/shell-quote": "^1.6.2",
+    "@wasmer/wasmfs": "^0.11.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "shell-quote": "^1.7.2",
     "ts-loader": "^7.0.4",
     "typescript": "^3.9.3",
-    "webpack": "^4.43.0"
+    "webpack": "^4.43.0",
+    "xterm": "^4.6.0",
+    "xterm-addon-fit": "^0.4.0",
+    "xterm-addon-web-links": "^0.4.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch --config webpack.config.js --info-verbosity verbose",
+    "build:production": "webpack --config webpack.prod.js",
+    "watch:production": "webpack --watch --config webpack.prod.js --info-verbosity verbose",
     "start": "webpack-dev-server",
-    "test": "jest"
+    "test": "jest",
+    "set-license": "scripts/set-license.bash"
   },
   "jest": {
     "verbose": true,
@@ -47,19 +57,22 @@
       "not op_mini all"
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 chrome version"
     ]
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
+    "@types/chrome": "^0.0.114",
     "babel-jest": "^26.0.1",
     "copy-webpack-plugin": "^6.0.1",
     "css-loader": "^3.5.3",
     "jest": "^26.0.1",
+    "prettier": "^2.0.5",
     "react-test-renderer": "^16.13.1",
+    "source-map-loader": "^1.0.0",
+    "source-map-support": "^0.5.19",
     "style-loader": "^1.2.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0"

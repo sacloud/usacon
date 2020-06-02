@@ -17,7 +17,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './popup.css';
+import './css/popup.css';
 
 import App from './App';
 

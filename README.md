@@ -1,10 +1,10 @@
-# chrome-sacloud-console
+# UsaCon 
 
-A Google Chrome extension to use CLI for SakuraCloud in the control panel
+A browser extension for using SakuraCloud CLI in the control panel.
 
 ## License
 
-  `chrome-sacloud-console` Copyright (C) 2020 The chrome-sacloud-console Authors.
+  `usacon` Copyright (c) 2020 The UsaCon Authors.
 
-  This project is published under [Apache 2.0 License](LICENSE).
+  This project is published under [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](LICENSE).
 
