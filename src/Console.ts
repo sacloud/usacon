@@ -51,6 +51,14 @@ export class Console {
 ;
         this.runner = new Runner(this.shellAddon)
 
+        // TODO APIキー受け渡し機能実装までの暫定処置: Fakeモードを常に有効にする
+        this.runner.setEnvs(new Map<string,string>(
+            [
+                ["SAKURACLOUD_FAKE_MODE", "1"],
+                ["SAKURACLOUD_FAKE_STORE_PATH", "usacloud-fake-store.json"],
+            ],
+        ));
+
         // TODO 終了処理の一元化
         this.runner.onExit((code) => {
             if (code !== 0) {

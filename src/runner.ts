@@ -23,15 +23,13 @@ import {ShellAddon} from "./xterm-addon-shell/shell";
 const USACLOUD_WASM_URL = "usacloud.wasm";
 
 export interface Printer {
-    read(prompt: string, continuationPrompt: string): Promise<string>
-
     print(message: string): void
 }
 
 // TODO 名前変更、プロセスの起動/終了(ioの管理など)を行わせる
 export class Runner {
     go: Go;
-    printer: ShellAddon; // TODO printer
+    printer: Printer;
     sfs: SimpleFs;
 
     wasmBuffer: BufferSource | null;
@@ -42,7 +40,7 @@ export class Runner {
         return this._initialized;
     }
 
-    constructor(printer: ShellAddon) { // TODO Printer
+    constructor(printer: Printer) {
         // init memfs
         this.sfs = new SimpleFs();
 
@@ -54,13 +52,8 @@ export class Runner {
         this.wasmBuffer = null;
 
         // TODO プロセス起動時に処理すべき
-        this.sfs.volume.fds[0].node.read = this.stdinRead.bind(this); // stdin
         this.sfs.volume.fds[1].node.write = this.stdoutWrite.bind(this); // stdout
         this.sfs.volume.fds[2].node.write = this.stdoutWrite.bind(this); // stderr
-
-        const ttyFd = this.sfs.volume.openSync("/dev/tty", "w+"); // tty
-        this.sfs.volume.fds[ttyFd].node.read = this.stdinRead.bind(this);
-        this.sfs.volume.fds[ttyFd].node.write = this.stdoutWrite.bind(this);
 
         this.readStdinCounter = 0;
     }
@@ -76,83 +69,6 @@ export class Runner {
                 this.wasmBuffer = bytes;
                 this._initialized = true;
             })
-    }
-
-    stdinRead(
-        stdinBuffer: Buffer | Uint8Array,
-        offset: number = 0,
-        length: number = stdinBuffer.byteLength,
-        position?: number
-    ) {
-        console.log("stdinRead", Date.now());
-        const responseStdin = "y\n";
-        const buffer = new TextEncoder().encode(responseStdin);
-
-        const ttyFd = this.sfs.volume.openSync("/dev/tty", "w+");
-        this.sfs.fs.writeSync(ttyFd,buffer,0, buffer.length, 0);
-
-        // Return the current stdin
-        return buffer.length;
-
-        // console.log("stdinRead", stdinBuffer);
-        // if (this.readStdinCounter % 2 !== 0) {
-        //     this.readStdinCounter++;
-        //     return 0;
-        // }
-        // let responseStdin: string | null = null;
-        //
-        // console.log("reading...");
-        // this.printer.read("")
-        //     .then((line) => {
-        //         console.log("read:", responseStdin)
-        //         responseStdin = line;
-        //     })
-        //     // .catch((e) => {
-        //     //     console.error("stdinRead: error", e)
-        //     //     this.printer.print(new TextEncoder().encode("\n").toString());
-        //     //     const userError = new Error("Process killed by user");
-        //     //     (userError as any).user = true;
-        //     //     throw userError;
-        //     //     return -1; // unreachable
-        //     // });
-        // // this.printer.read("")
-        // //     .then((line) => {
-        // //         console.log("read:", responseStdin)
-        // //         responseStdin = line;
-        // //     })
-        // //     .catch((e) => {
-        // //         console.error("stdinRead: error", e)
-        // //         this.printer.print(new TextEncoder().encode("\n").toString());
-        // //         const userError = new Error("Process killed by user");
-        // //         (userError as any).user = true;
-        // //         throw userError;
-        // //         return -1; // unreachable
-        // //     });
-        //
-        //
-        // // responseStdin = prompt("");
-        // // if (responseStdin === null) {
-        // //     this.printer.print(new TextEncoder().encode("\n").toString());
-        // //     const userError = new Error("Process killed by user");
-        // //     (userError as any).user = true;
-        // //     throw userError;
-        // //     return -1; // unreachable
-        // // }
-        //
-        //
-        // //this.printer.print(new TextEncoder().encode(responseStdin).toString());
-        // //console.log("write to tty", responseStdin);
-        // // const ttyFd = this.sfs.volume.openSync("/dev/tty", "w+"); // tty
-        // // return this.sfs.volume.writeSync(ttyFd, new TextEncoder().encode(responseStdin));
-        //
-        // // // First check for errors
-        // if (!responseStdin) {
-        //     return 0;
-        // }
-        // //
-        // const buffer = new TextEncoder().encode(responseStdin);
-        // // Return the current stdin
-        // return buffer.length;
     }
 
     private stdoutWrite(
@@ -181,7 +97,6 @@ export class Runner {
 
     setEnvs(envs: Map<string, string>): void {
         this.go.env = Object.fromEntries(envs);
-        console.log("env:", this.go.env);
     }
 }
 

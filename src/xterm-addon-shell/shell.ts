@@ -107,7 +107,6 @@ export class ShellAddon implements ITerminalAddon {
             this._input = "";
             this._cursor = 0;
             this._active = true;
-            console.log("shell.read: promise done");
         });
     }
 
