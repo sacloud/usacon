@@ -15,4 +15,44 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-console.log("content_script is not implemented yet");
+// initialize app
+import './css/content.css';
+import './css/xterm.css';
+import './css/xterm_customize.css';
+import {Console} from "./Console";
+
+const rootId = "chrome-sacloud-console-root";
+
+function init() {
+    // init UI element
+    const root = initRootElement();
+    let term = new Console(root);
+    term.init().then( () => {
+        term.start();
+    })
+}
+
+function initRootElement(): HTMLElement{
+    let root = document.getElementById(rootId);
+    if (!root) {
+        root = createRootElement();
+    }
+    return root;
+}
+
+
+function createRootElement() : HTMLElement {
+    let root = document.createElement("div")
+    root.setAttribute("id", rootId)
+
+    let parents = document.getElementsByTagName("body");
+    parents[0].appendChild(root);
+
+    return root
+}
+
+// entry point
+window.addEventListener('load', (e:Event) => {
+    init();
+});
+

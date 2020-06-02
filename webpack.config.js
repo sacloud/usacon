@@ -15,6 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+const CopyPlugin = require('copy-webpack-plugin');
+
 module.exports = {
     mode: "development",
     entry: {
@@ -23,10 +25,15 @@ module.exports = {
     },
     output: {
         filename: '[name].bundle.js',
-        path: `${__dirname}/public`,
+        path: `${__dirname}/dist`,
     },
     module: {
         rules: [
+            {
+                test: /\.js$/,
+                enforce: 'pre',
+                use: ['source-map-loader'],
+            },
             {
                 test: /\.tsx?$/,
                 use: "ts-loader"
@@ -47,10 +54,29 @@ module.exports = {
     resolve: {
         extensions: [".ts", ".tsx", ".js", ".json", ".css"]
     },
+    stats: {
+        warningsFilter: [
+            'Critical dependency: require function is used in a way in which dependencies cannot be statically extracted',
+            'Failed to parse source map'
+        ]
+    },
+    performance: {
+        maxAssetSize: 30*1024*1024,
+        maxEntrypointSize: 1*1024*1024,
+    },
+
+    devtool: "inline-source-map",
     devServer: {
-        contentBase: `${__dirname}/public`,
+        contentBase: `${__dirname}/dist`,
         watchContentBase: true,
         open: true,
         openPage:"popup.html"
-    }
+    },
+    plugins: [
+        new CopyPlugin({
+            patterns: [
+                { from: 'public', to: './' }
+            ],
+        }),
+    ],
 };

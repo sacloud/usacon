@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "sourceMap": true,
     "target": "es5",
     "lib": [
       "dom",
@@ -16,7 +17,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": false,
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": "src/typings",
+    "paths": {
+      "local-echo": ["local-echo.d.ts"]
+    }
   },
   "include": [
     "src"
