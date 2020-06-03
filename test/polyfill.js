@@ -15,12 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#chrome-sacloud-console-root {
-    position: absolute;
-    top: 400px;
-    left: 200px;
-    display: block;
-    z-index: 1;
-    width: 1200px;
-    height: 400px;
+if (typeof global !== "undefined") {
+    // global already exists
+} else if (typeof window !== "undefined") {
+    window.global = window;
+} else if (typeof self !== "undefined") {
+    self.global = self;
+} else {
+    throw new Error("global undefined");
 }
+
+// polyfill extentions namespaces
+if (typeof global.chrome === "undefined") {
+    global.chrome = {};
+}
+
+if (typeof global.chrome.runtime === "undefined") {
+    global.chrome.runtime = {};
+}
+
+if (typeof global.chrome.runtime.getURL === "undefined") {
+    global.chrome.runtime.getURL = function(url) {
+        return "./" + url;
+    };
+}
+
