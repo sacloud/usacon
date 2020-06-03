@@ -17,10 +17,12 @@
 
 #chrome-sacloud-console-root {
     position: absolute;
-    top: 400px;
-    left: 200px;
+    top: 0;
+    left: 0;
     display: block;
     z-index: 1;
     width: 1200px;
-    height: 400px;
+    height: 800px;
+    margin: 50px;
 }
+

@@ -69,13 +69,14 @@ module.exports = {
     devServer: {
         contentBase: `${__dirname}/dist`,
         watchContentBase: true,
-        open: true,
-        openPage:"popup.html"
+        open: "Google Chrome",
+        openPage:"local-test.html"
     },
     plugins: [
         new CopyPlugin({
             patterns: [
-                { from: 'public', to: './' }
+                {from: 'public', to: './'},
+                {from: 'test', to: './'},
             ],
         }),
     ],
