@@ -15,10 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import * as processWorker from "./wasm-terminal/workers/process.worker";
-import { WASI } from "@wasmer/wasi";
-import BrowserWASIBindings from "@wasmer/wasi/lib/bindings/browser";
+export interface CommandDef {
+    type: string // TODO supports only 'GoWasm'
+    name: string
+    data(): Promise<Uint8Array>;
+}
 
-WASI.defaultBindings = BrowserWASIBindings;
+async function getWasmBinaryFromUrl(url: string) {
+    const fetched = await fetch(url);
+    const buffer = await fetched.arrayBuffer();
+    return new Uint8Array(buffer);
+}
 
-export default processWorker;
+const usacloudCommand: CommandDef = {
+    type: "GoWasm",
+    name: "usacloud",
+    data: () => getWasmBinaryFromUrl(chrome.runtime.getURL("usacloud.wasm")),
+}
+
+const envCommand: CommandDef = {
+    type: "GoWasm",
+    name: "env",
+    data: () => getWasmBinaryFromUrl(chrome.runtime.getURL("env.wasm")),
+}
+
+export const BuiltinCommands: CommandDef[] = [
+    usacloudCommand,
+    envCommand,
+]
+

@@ -20,6 +20,7 @@
   },
   "web_accessible_resources": [
     "usacloud.wasm",
+    "env.wasm",
     "worker.bundle.js"
   ]
 }
