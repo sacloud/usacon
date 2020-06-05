@@ -21,7 +21,8 @@ module.exports = {
     mode: "development",
     entry: {
         popup: './src/popup.tsx',
-        content: './src/content.ts'
+        content: './src/content.ts',
+        worker: './src/worker.ts'
     },
     output: {
         filename: '[name].bundle.js',

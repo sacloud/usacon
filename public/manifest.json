@@ -19,6 +19,7 @@
     "default_title": "UsaCon"
   },
   "web_accessible_resources": [
-    "usacloud.wasm"
+    "usacloud.wasm",
+    "worker.bundle.js"
   ]
 }
