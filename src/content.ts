@@ -36,7 +36,8 @@ const usaconBanner =
 \x1B[3m\x1B[37mThis project is published under GNU AFFERO GENERAL PUBLIC LICENSE Version 3\x1B[0m
 \x1B[3m\x1B[1;34mhttps://www.gnu.org/licenses/\x1B[0m
 
-\x1B[3m\x1B[37mCopyright (c) 2020 The UsaCon Authors\x1B[0m
+\x1B[3m\x1B[37m
+Copyright (c) 2020 The UsaCon Authors\x1B[0m
 =============================================================================`;
 
 function init() {
