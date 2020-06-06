@@ -44,8 +44,8 @@
     "build:production": "webpack --config webpack.prod.js",
     "watch:production": "webpack --watch --config webpack.prod.js --info-verbosity verbose",
     "start": "webpack-dev-server",
-    "test": "jest",
-    "set-license": "scripts/set-license.bash"
+    "format": "prettier --write '{src,test}/**/*.{ts,tsx,js,jsx}'",
+    "test": "jest"
   },
   "jest": {
     "verbose": true,
@@ -75,7 +75,7 @@
     "copy-webpack-plugin": "^6.0.1",
     "css-loader": "^3.5.3",
     "jest": "^26.0.1",
-    "prettier": "^2.0.5",
+    "prettier": "2.0.5",
     "react-test-renderer": "^16.13.1",
     "source-map-loader": "^1.0.0",
     "source-map-support": "^0.5.19",

@@ -57,11 +57,11 @@ export function wordBoundaries(input: string, leftSide: boolean = true) {
 export function closestLeftBoundary(input: string, offset: number) {
   const found = wordBoundaries(input, true)
     .reverse()
-    .find(x => x < offset);
+    .find((x) => x < offset);
   return found === undefined ? 0 : found;
 }
 export function closestRightBoundary(input: string, offset: number) {
-  const found = wordBoundaries(input, false).find(x => x > offset);
+  const found = wordBoundaries(input, false).find((x) => x > offset);
   return found === undefined ? input.length : found;
 }
 
@@ -154,5 +154,5 @@ export function collectAutocompleteCandidates(
   }, []);
 
   // Filter only the ones starting with the expression
-  return all.filter(txt => (txt as string).startsWith(expr as string));
+  return all.filter((txt) => (txt as string).startsWith(expr as string));
 }

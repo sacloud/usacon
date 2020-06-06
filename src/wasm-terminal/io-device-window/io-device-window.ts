@@ -90,7 +90,7 @@ export default class IoDeviceWindow {
     const inputArray: number[] = [];
 
     // Key Presses
-    this.popupKeyCodes.forEach(keyCode => {
+    this.popupKeyCodes.forEach((keyCode) => {
       if (!this.oldPopupKeyCodes.includes(keyCode)) {
         inputArray.push(1);
         inputArray.push(keyCode);
@@ -109,7 +109,7 @@ export default class IoDeviceWindow {
     this.oldMouseMovePosition = this.mouseMovePosition;
 
     // Key Releases
-    this.oldPopupKeyCodes.forEach(keyCode => {
+    this.oldPopupKeyCodes.forEach((keyCode) => {
       if (!this.popupKeyCodes.includes(keyCode)) {
         inputArray.push(3);
         inputArray.push(keyCode);
@@ -358,7 +358,7 @@ export default class IoDeviceWindow {
 
     return {
       x,
-      y
+      y,
     };
   }
 }

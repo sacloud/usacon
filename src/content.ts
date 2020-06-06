@@ -15,39 +15,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import './css/content.css';
-import './css/xterm.css';
-import './css/xterm_customize.css';
-import {Console} from "./console";
+import "./css/content.css";
+import "./css/xterm.css";
+import "./css/xterm_customize.css";
+import { Console } from "./console";
 
 const rootId = "chrome-sacloud-console-root";
 
 function init() {
-    const root = initRootElement();
-    const console = new Console();
-    console.open(root);
+  const root = initRootElement();
+  const console = new Console();
+  console.open(root);
 }
 
 function initRootElement(): HTMLElement {
-    let root = document.getElementById(rootId);
-    if (!root) {
-        root = createRootElement();
-    }
-    return root;
+  let root = document.getElementById(rootId);
+  if (!root) {
+    root = createRootElement();
+  }
+  return root;
 }
 
 function createRootElement(): HTMLElement {
-    let root = document.createElement("div")
-    root.setAttribute("id", rootId)
+  let root = document.createElement("div");
+  root.setAttribute("id", rootId);
 
-    let parents = document.getElementsByTagName("body");
-    parents[0].appendChild(root);
+  let parents = document.getElementsByTagName("body");
+  parents[0].appendChild(root);
 
-    return root
+  return root;
 }
 
 // entry point
-window.addEventListener('load', (e: Event) => {
-    init();
+window.addEventListener("load", (e: Event) => {
+  init();
 });
-

@@ -16,27 +16,26 @@
  */
 
 if (typeof global !== "undefined") {
-    // global already exists
+  // global already exists
 } else if (typeof window !== "undefined") {
-    window.global = window;
+  window.global = window;
 } else if (typeof self !== "undefined") {
-    self.global = self;
+  self.global = self;
 } else {
-    throw new Error("global undefined");
+  throw new Error("global undefined");
 }
 
 // polyfill extentions namespaces
 if (typeof global.chrome === "undefined") {
-    global.chrome = {};
+  global.chrome = {};
 }
 
 if (typeof global.chrome.runtime === "undefined") {
-    global.chrome.runtime = {};
+  global.chrome.runtime = {};
 }
 
 if (typeof global.chrome.runtime.getURL === "undefined") {
-    global.chrome.runtime.getURL = function(url) {
-        return "./" + url;
-    };
+  global.chrome.runtime.getURL = function (url) {
+    return "./" + url;
+  };
 }
-

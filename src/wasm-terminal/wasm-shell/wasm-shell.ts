@@ -25,7 +25,7 @@ import {
   collectAutocompleteCandidates,
   getLastToken,
   hasTrailingWhitespace,
-  isIncompleteInput
+  isIncompleteInput,
 } from "./shell-utils";
 import ShellHistory from "./shell-history";
 import WasmTerminalConfig from "../wasm-terminal-config";
@@ -59,7 +59,7 @@ export default class WasmShell {
     wasmTty: WasmTty,
     options: { historySize: number; maxAutocompleteEntries: number } = {
       historySize: 10,
-      maxAutocompleteEntries: 100
+      maxAutocompleteEntries: 100,
     }
   ) {
     this.wasmTerminalConfig = wasmTerminalConfig;
@@ -71,7 +71,7 @@ export default class WasmShell {
     this._autocompleteHandlers = [
       (index, tokens) => {
         return this.history.entries;
-      }
+      },
     ];
     this._active = false;
   }
@@ -304,7 +304,7 @@ export default class WasmShell {
     // If this looks like a pasted input, expand it
     if (data.length > 3 && data.charCodeAt(0) !== 0x1b) {
       const normData = data.replace(/[\r\n]+/g, "\r");
-      Array.from(normData).forEach(c => this.handleData(c));
+      Array.from(normData).forEach((c) => this.handleData(c));
     } else {
       this.handleData(data);
     }

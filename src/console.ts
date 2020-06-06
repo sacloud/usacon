@@ -16,12 +16,14 @@
  */
 
 import WasmTerminal from "./wasm-terminal";
-import {WasmFs} from "@wasmer/wasmfs";
-import {BuiltinCommands} from "./commands";
-import {CommandType, CommandValue} from "./wasm-terminal/wasm-terminal-config";
+import { WasmFs } from "@wasmer/wasmfs";
+import { BuiltinCommands } from "./commands";
+import {
+  CommandType,
+  CommandValue,
+} from "./wasm-terminal/wasm-terminal-config";
 
-const usaconBanner =
-    `=============================================================================\x1B[37m
+const usaconBanner = `=============================================================================\x1B[37m
            _   _             _____                       _      
           | | | |           /  __ \\                     | |     
           | | | |___  __ _  | /  \\/ ___  _ __  ___  ___ | | ___ 
@@ -39,42 +41,44 @@ Copyright (c) 2020 The UsaCon Authors\x1B[0m
 =============================================================================`;
 
 export class Console {
-    wasmFs: WasmFs
-    term: WasmTerminal
+  wasmFs: WasmFs;
+  term: WasmTerminal;
 
-    constructor() {
-        this.wasmFs = new WasmFs();
-        this.term = new WasmTerminal({
-            fetchCommand: this.fetch.bind(this),
-            processWorkerUrl: chrome.runtime.getURL("worker.bundle.js"),
-            wasmFs: this.wasmFs,
-        })
-        this.term.pendingPrintOnOpen = usaconBanner;
-        this.term.initializer = this.init.bind(this);
+  constructor() {
+    this.wasmFs = new WasmFs();
+    this.term = new WasmTerminal({
+      fetchCommand: this.fetch.bind(this),
+      processWorkerUrl: chrome.runtime.getURL("worker.bundle.js"),
+      wasmFs: this.wasmFs,
+    });
+    this.term.pendingPrintOnOpen = usaconBanner;
+    this.term.initializer = this.init.bind(this);
+  }
+
+  open(root: HTMLElement) {
+    this.term.open(root);
+  }
+
+  private async init() {
+    BuiltinCommands.filter((c) => c.needInstall(this.wasmFs)).map(
+      async (c) => await c.install(this.wasmFs)
+    );
+  }
+
+  private async fetch({
+    args,
+    env,
+  }: {
+    args: Array<string>;
+    env?: { [key: string]: string };
+  }) {
+    const commandName = args[0];
+    const commandDef = BuiltinCommands.find((c) => c.name === commandName);
+    if (!commandDef) {
+      throw new Error(`command '${commandName}' not found`);
     }
 
-    open(root: HTMLElement) {
-        this.term.open(root);
-    }
-
-    private async init() {
-        BuiltinCommands
-            .filter(c => c.needInstall(this.wasmFs))
-            .map(async c => await c.install(this.wasmFs));
-    }
-
-    private async fetch({args, env}: {
-        args: Array<string>,
-        env?: { [key: string]: string },
-    }) {
-        const commandName = args[0];
-        const commandDef = BuiltinCommands.find(c => c.name === commandName);
-        if (!commandDef) {
-            throw new Error(`command '${commandName}' not found`);
-        }
-
-        const data = await commandDef.fetchCommand(this.wasmFs);
-        return {type: commandDef.type, value: data};
-    }
+    const data = await commandDef.fetchCommand(this.wasmFs);
+    return { type: commandDef.type, value: data };
+  }
 }
-
