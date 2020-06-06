@@ -15,5 +15,5 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// prettier-ignore
 declare export function polyfillForGolang(fs: any): void;
-

@@ -36,19 +36,19 @@ export default class WASICommand extends Command {
       preopens: {
         ".": ".",
         "/": "/",
-        ...(this.options.preopens || {})
+        ...(this.options.preopens || {}),
       },
       env: this.options.env,
       args: this.options.args,
       bindings: {
         ...WASI.defaultBindings,
-        fs: wasmFs.fs
-      }
+        fs: wasmFs.fs,
+      },
     };
     const wasi = new WASI(options);
     let wasmModule = this.options.module as WebAssembly.Module;
     let instance = await WebAssembly.instantiate(wasmModule, {
-      ...wasi.getImports(wasmModule)
+      ...wasi.getImports(wasmModule),
     });
     wasi.start(instance);
   }

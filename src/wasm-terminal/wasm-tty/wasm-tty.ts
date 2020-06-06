@@ -44,7 +44,7 @@ export default class WasmTTY {
 
     this._termSize = {
       cols: this.xterm.cols,
-      rows: this.xterm.rows
+      rows: this.xterm.rows,
     };
     this._promptPrefix = "";
     this._continuationPromptPrefix = "";
@@ -70,7 +70,7 @@ export default class WasmTTY {
     return {
       promise: readPromise,
       resolve: readResolve,
-      reject: readReject
+      reject: readReject,
     };
   }
 
@@ -95,7 +95,7 @@ export default class WasmTTY {
     return {
       promptPrefix,
       continuationPromptPrefix,
-      ...this._getAsyncRead()
+      ...this._getAsyncRead(),
     };
   }
 
@@ -113,7 +113,7 @@ export default class WasmTTY {
 
     return {
       promptPrefix,
-      ...this._getAsyncRead()
+      ...this._getAsyncRead(),
     };
   }
 
@@ -135,7 +135,7 @@ export default class WasmTTY {
       //@ts-ignore
       this.xterm._core.writeSync(normInput);
       //@ts-ignore
-      this.xterm._core._renderService._renderer._runOperation(renderer =>
+      this.xterm._core._renderService._renderer._runOperation((renderer) =>
         renderer.onGridChanged(0, this.xterm.rows - 1)
       );
     } else {

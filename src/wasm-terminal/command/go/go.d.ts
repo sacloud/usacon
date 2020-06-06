@@ -15,17 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {Volume} from "memfs/lib/volume";
+import { Volume } from "memfs/lib/volume";
 
 declare class Go {
-    argv: string[];
-    env: any;
-    importObject?: WebAssembly.Imports;
+  argv: string[];
+  env: any;
+  importObject?: WebAssembly.Imports;
 
-    constructor();
-    exit: (code: number) => void;
-    run(instance: WebAssembly.Instance): Promise<any>;
+  constructor();
+  exit: (code: number) => void;
+  run(instance: WebAssembly.Instance): Promise<any>;
 }
 
 export default Go;
-

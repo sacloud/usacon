@@ -25,9 +25,13 @@ import CommandOptions from "../command/command-options";
 import WasmTerminalConfig from "../wasm-terminal-config";
 import WasmTty from "../wasm-tty/wasm-tty";
 import IoDeviceWindow from "../io-device-window/io-device-window";
-import {type} from "os";
+import { type } from "os";
 
-const isFunction = (value: any) => value && (Object.prototype.toString.call(value) === "[object Function]" || "function" === typeof value || value instanceof Function);
+const isFunction = (value: any) =>
+  value &&
+  (Object.prototype.toString.call(value) === "[object Function]" ||
+    "function" === typeof value ||
+    value instanceof Function);
 
 let processWorkerBlobUrl: string | undefined;
 
@@ -48,11 +52,11 @@ export default class CommandRunner {
   wasmTty?: WasmTty;
 
   constructor(
-      wasmTerminalConfig: WasmTerminalConfig,
-      commandString: string,
-      commandStartReadCallback: Function,
-      commandEndCallback: Function,
-      wasmTty?: WasmTty
+    wasmTerminalConfig: WasmTerminalConfig,
+    commandString: string,
+    commandStartReadCallback: Function,
+    commandEndCallback: Function,
+    wasmTty?: WasmTty
   ) {
     this.wasmTerminalConfig = wasmTerminalConfig;
     this.commandString = commandString;
@@ -68,9 +72,9 @@ export default class CommandRunner {
     this.pipedStdinDataForNextProcess = new Uint8Array();
     this.isRunning = false;
     this.supportsSharedArrayBuffer =
-        this.wasmTerminalConfig.processWorkerUrl &&
-        (window as any).SharedArrayBuffer &&
-        (window as any).Atomics;
+      this.wasmTerminalConfig.processWorkerUrl &&
+      (window as any).SharedArrayBuffer &&
+      (window as any).Atomics;
   }
 
   async runCommand() {
@@ -86,16 +90,16 @@ export default class CommandRunner {
 
       // Translate our AST into Command Options
       this.commandOptionsForProcessesToRun = await this._getCommandOptionsFromAST(
-          commandAst[0],
-          this.wasmTerminalConfig,
-          this.wasmTty
+        commandAst[0],
+        this.wasmTerminalConfig,
+        this.wasmTty
       );
     } catch (c) {
       if (this.wasmTty) {
         this.wasmTty.print("\r\n");
         this.wasmTty.print(`${c.toString()}\r\n`);
       }
-      console.error("wasm shell: parse error",c);
+      console.error("wasm shell: parse error", c);
       this.commandEndCallback();
       return;
     }
@@ -111,7 +115,7 @@ export default class CommandRunner {
       return;
     }
 
-    this.spawnedProcessObjects.forEach(processObject => {
+    this.spawnedProcessObjects.forEach((processObject) => {
       if (processObject.worker) {
         processObject.worker.terminate();
       }
@@ -136,7 +140,7 @@ export default class CommandRunner {
     }
 
     const sharedStdin = this.spawnedProcessObjects[processObjectIndex]
-        .sharedStdin;
+      .sharedStdin;
     let startingIndex = 1;
     if (sharedStdin[0] > 0) {
       startingIndex = sharedStdin[0];
@@ -153,9 +157,9 @@ export default class CommandRunner {
 
   async _tryToSpawnProcess(commandOptionIndex: number) {
     if (
-        commandOptionIndex + 1 > this.spawnedProcesses &&
-        this.spawnedProcessObjects.length < 2 &&
-        commandOptionIndex < this.commandOptionsForProcessesToRun.length
+      commandOptionIndex + 1 > this.spawnedProcesses &&
+      this.spawnedProcessObjects.length < 2 &&
+      commandOptionIndex < this.commandOptionsForProcessesToRun.length
     ) {
       this.spawnedProcesses++;
       await this._spawnProcess(commandOptionIndex);
@@ -167,15 +171,15 @@ export default class CommandRunner {
 
     // Check if it is a Wasm command, that can be placed into a worker.
     if (
-        this.commandOptionsForProcessesToRun[commandOptionIndex].module &&
-        this.supportsSharedArrayBuffer
+      this.commandOptionsForProcessesToRun[commandOptionIndex].module &&
+      this.supportsSharedArrayBuffer
     ) {
       spawnedProcessObject = await this._spawnProcessAsWorker(
-          commandOptionIndex
+        commandOptionIndex
       );
     } else {
       spawnedProcessObject = await this._spawnProcessAsService(
-          commandOptionIndex
+        commandOptionIndex
       );
     }
 
@@ -184,9 +188,9 @@ export default class CommandRunner {
 
     // Start the process
     spawnedProcessObject.process.start(
-        this.pipedStdinDataForNextProcess.length > 0
-            ? this.pipedStdinDataForNextProcess
-            : undefined
+      this.pipedStdinDataForNextProcess.length > 0
+        ? this.pipedStdinDataForNextProcess
+        : undefined
     );
 
     // Remove the piped stdin if we passed it
@@ -198,8 +202,8 @@ export default class CommandRunner {
     let isNextCallbackCommand = false;
     if (this.commandOptionsForProcessesToRun.length > commandOptionIndex + 1) {
       isNextCallbackCommand =
-          this.commandOptionsForProcessesToRun[commandOptionIndex + 1]
-              .callback !== undefined;
+        this.commandOptionsForProcessesToRun[commandOptionIndex + 1]
+          .callback !== undefined;
     }
     if (this.supportsSharedArrayBuffer && !isNextCallbackCommand) {
       return this._tryToSpawnProcess(commandOptionIndex + 1);
@@ -215,8 +219,8 @@ export default class CommandRunner {
 
     // Generate our process
     const workerBlobUrl = await this._getBlobUrlForProcessWorker(
-        processWorkerUrl,
-        this.wasmTty
+      processWorkerUrl,
+      this.wasmTty
     );
     const processWorker = new Worker(workerBlobUrl);
     const processComlink = Comlink.wrap(processWorker);
@@ -233,36 +237,36 @@ export default class CommandRunner {
 
     // @ts-ignore
     const process: any = await new processComlink(
-        // Command Options
-        this.commandOptionsForProcessesToRun[commandOptionIndex],
-        // WasmFs File System JSON
-        wasmFsJson,
-        // Data Callback
-        Comlink.proxy(
-            this._processDataCallback.bind(this, {
-              commandOptionIndex,
-              sync: false
-            })
-        ),
-        // End Callback
-        Comlink.proxy(
-            this._processEndCallback.bind(this, {
-              commandOptionIndex,
-              processWorker
-            })
-        ),
-        // Error Callback
-        Comlink.proxy(
-            this._processErrorCallback.bind(this, {commandOptionIndex})
-        ),
-        // Io Device Window
-        Comlink.proxy(ioDeviceWindow),
-        // Shared Array Buffer for IoDevice Input
-        sharedIoDeviceInputBuffer,
-        // Shared Array Bufer for Stdin
-        sharedStdinBuffer,
-        // Stdin read callback
-        Comlink.proxy(this._processStartStdinReadCallback.bind(this))
+      // Command Options
+      this.commandOptionsForProcessesToRun[commandOptionIndex],
+      // WasmFs File System JSON
+      wasmFsJson,
+      // Data Callback
+      Comlink.proxy(
+        this._processDataCallback.bind(this, {
+          commandOptionIndex,
+          sync: false,
+        })
+      ),
+      // End Callback
+      Comlink.proxy(
+        this._processEndCallback.bind(this, {
+          commandOptionIndex,
+          processWorker,
+        })
+      ),
+      // Error Callback
+      Comlink.proxy(
+        this._processErrorCallback.bind(this, { commandOptionIndex })
+      ),
+      // Io Device Window
+      Comlink.proxy(ioDeviceWindow),
+      // Shared Array Buffer for IoDevice Input
+      sharedIoDeviceInputBuffer,
+      // Shared Array Bufer for Stdin
+      sharedStdinBuffer,
+      // Stdin read callback
+      Comlink.proxy(this._processStartStdinReadCallback.bind(this))
     );
 
     // Initialize the shared Stdin.
@@ -275,7 +279,7 @@ export default class CommandRunner {
       commandOptionIndex,
       ioDeviceWindow,
       worker: processWorker,
-      sharedStdin: sharedStdin
+      sharedStdin: sharedStdin,
     };
   }
 
@@ -287,51 +291,51 @@ export default class CommandRunner {
     const ioDeviceWindow = new IoDeviceWindow();
 
     const process = new Process(
-        // Command Options
-        this.commandOptionsForProcessesToRun[commandOptionIndex],
-        // WasmFs File System JSON
-        wasmFsJson,
-        // Data Callback
-        this._processDataCallback.bind(this, {commandOptionIndex, sync: true}),
-        // End Callback
-        this._processEndCallback.bind(this, {commandOptionIndex}),
-        // Error Callback
-        this._processErrorCallback.bind(this, {commandOptionIndex}),
-        // Io Device Window
-        ioDeviceWindow
+      // Command Options
+      this.commandOptionsForProcessesToRun[commandOptionIndex],
+      // WasmFs File System JSON
+      wasmFsJson,
+      // Data Callback
+      this._processDataCallback.bind(this, { commandOptionIndex, sync: true }),
+      // End Callback
+      this._processEndCallback.bind(this, { commandOptionIndex }),
+      // Error Callback
+      this._processErrorCallback.bind(this, { commandOptionIndex }),
+      // Io Device Window
+      ioDeviceWindow
     );
 
     return {
       process,
       commandOptionIndex,
-      ioDeviceWindow
+      ioDeviceWindow,
     };
   }
 
   _processDataCallback(
-      {commandOptionIndex, sync}: { commandOptionIndex: number; sync: boolean },
-      data: Uint8Array
+    { commandOptionIndex, sync }: { commandOptionIndex: number; sync: boolean },
+    data: Uint8Array
   ) {
     if (!this.isRunning) return;
 
     if (commandOptionIndex < this.commandOptionsForProcessesToRun.length - 1) {
       // Pass along to the next spawned process
       if (
-          // Ensure we can use shared array buffer,
-          // And We have more than one proccess spawned,
-          // And we are not the last spawned process we are trying to premptively write to
-          // The last && fixes a race condition from:
-          // https://github.com/wasmerio/wasmer-js/issues/160
-          this.supportsSharedArrayBuffer &&
-          this.spawnedProcessObjects.length > 1 &&
-          this.spawnedProcessObjects[this.spawnedProcessObjects.length - 1]
-              .commandOptionIndex > commandOptionIndex
+        // Ensure we can use shared array buffer,
+        // And We have more than one proccess spawned,
+        // And we are not the last spawned process we are trying to premptively write to
+        // The last && fixes a race condition from:
+        // https://github.com/wasmerio/wasmer-js/issues/160
+        this.supportsSharedArrayBuffer &&
+        this.spawnedProcessObjects.length > 1 &&
+        this.spawnedProcessObjects[this.spawnedProcessObjects.length - 1]
+          .commandOptionIndex > commandOptionIndex
       ) {
         // Send the output to stdin since we are being piped
         this._addStdinToSharedStdin(data, 1);
       } else {
         const newPipedStdinData = new Uint8Array(
-            data.length + this.pipedStdinDataForNextProcess.length
+          data.length + this.pipedStdinDataForNextProcess.length
         );
         newPipedStdinData.set(this.pipedStdinDataForNextProcess);
         newPipedStdinData.set(data, this.pipedStdinDataForNextProcess.length);
@@ -347,13 +351,13 @@ export default class CommandRunner {
   }
 
   _processEndCallback(
-      endCallbackConfig: {
-        commandOptionIndex: number;
-        processWorker?: Worker;
-      },
-      wasmFsJson: any
+    endCallbackConfig: {
+      commandOptionIndex: number;
+      processWorker?: Worker;
+    },
+    wasmFsJson: any
   ) {
-    const {commandOptionIndex, processWorker} = endCallbackConfig;
+    const { commandOptionIndex, processWorker } = endCallbackConfig;
 
     if (processWorker) {
       // Terminate our worker
@@ -380,14 +384,14 @@ export default class CommandRunner {
   }
 
   _processErrorCallback(
-      errorCallbackConfig: { commandOptionIndex: number },
-      error: string,
-      wasmFsJson: any
+    errorCallbackConfig: { commandOptionIndex: number },
+    error: string,
+    wasmFsJson: any
   ) {
-    const {commandOptionIndex} = errorCallbackConfig;
+    const { commandOptionIndex } = errorCallbackConfig;
 
     console.error(
-        `${this.commandOptionsForProcessesToRun[commandOptionIndex].args[0]}: ${error}`
+      `${this.commandOptionsForProcessesToRun[commandOptionIndex].args[0]}: ${error}`
     );
 
     // Sync our filesystem
@@ -408,8 +412,8 @@ export default class CommandRunner {
   }
 
   async _getBlobUrlForProcessWorker(
-      processWorkerUrl: string,
-      wasmTty?: WasmTty
+    processWorkerUrl: string,
+    wasmTty?: WasmTty
   ) {
     if (processWorkerBlobUrl) {
       return processWorkerBlobUrl;
@@ -417,9 +421,9 @@ export default class CommandRunner {
 
     // Fetch the worker, but at least show the message for a short while
     const workerString = await Promise.all([
-      fetch(processWorkerUrl).then(response => response.text()),
-      new Promise(resolve => setTimeout(resolve, 500))
-    ]).then(responses => responses[0]);
+      fetch(processWorkerUrl).then((response) => response.text()),
+      new Promise((resolve) => setTimeout(resolve, 500)),
+    ]).then((responses) => responses[0]);
 
     // Create the worker blob and URL
     const workerBlob = new Blob([workerString as any]);
@@ -428,9 +432,9 @@ export default class CommandRunner {
   }
 
   async _getCommandOptionsFromAST(
-      ast: any,
-      wasmTerminalConfig: WasmTerminalConfig,
-      wasmTty?: WasmTty
+    ast: any,
+    wasmTerminalConfig: WasmTerminalConfig,
+    wasmTty?: WasmTty
   ): Promise<Array<CommandOptions>> {
     // The array of command options we are returning
     let commandOptions: Array<CommandOptions> = [];
@@ -439,9 +443,9 @@ export default class CommandRunner {
     let commandArgs = ast.args.map((arg: any) => arg.value);
     let args = [commandName, ...commandArgs];
 
-    const envEntries = Object.entries(ast.env).map(
-        ([key, value]: [string, any]) => [key, value.value]
-    );
+    const envEntries = Object.entries(
+      ast.env
+    ).map(([key, value]: [string, any]) => [key, value.value]);
     let env: any = {};
 
     // Manually doing Object.fromEntries for compatibility with Node 10
@@ -450,7 +454,7 @@ export default class CommandRunner {
     });
 
     if (wasmTty) {
-      const {rows, cols} = wasmTty.getTermSize();
+      const { rows, cols } = wasmTty.getTermSize();
       env.LINES = rows;
       env.COLUMNS = cols;
     }
@@ -461,9 +465,9 @@ export default class CommandRunner {
         let astRedirect = ast.redirects[0];
         if (astRedirect && astRedirect.type === "pipe") {
           const redirectedCommandOptions = await this._getCommandOptionsFromAST(
-              astRedirect.command,
-              wasmTerminalConfig,
-              wasmTty
+            astRedirect.command,
+            wasmTerminalConfig,
+            wasmTty
           );
           // Add the child options to our command options
           commandOptions = commandOptions.concat(redirectedCommandOptions);
@@ -476,14 +480,16 @@ export default class CommandRunner {
 
     const response = await wasmTerminalConfig.fetchCommand({
       args,
-      env
+      env,
     });
 
     switch (response.type) {
       case "GoWasm":
       case "WASI":
         // TODO cache
-        const wasmModule = await WebAssembly.compile(response.value as Uint8Array);
+        const wasmModule = await WebAssembly.compile(
+          response.value as Uint8Array
+        );
         commandOptions.unshift({
           args,
           env,
@@ -498,7 +504,7 @@ export default class CommandRunner {
           env,
           // @ts-ignore
           callback: response.value,
-          type:response.type,
+          type: response.type,
         });
         break;
       case "Options":
@@ -511,4 +517,3 @@ export default class CommandRunner {
     return commandOptions;
   }
 }
-

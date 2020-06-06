@@ -16,68 +16,86 @@
  */
 
 export function polyfillForGolang(fs) {
-    if (typeof global !== "undefined") {
-        // global already exists
-    } else if (typeof window !== "undefined") {
-        window.global = window;
-    } else if (typeof self !== "undefined") {
-        self.global = self;
-    } else {
-        throw new Error("cannot export Go (neither global, window nor self is defined)");
-    }
+  if (typeof global !== "undefined") {
+    // global already exists
+  } else if (typeof window !== "undefined") {
+    window.global = window;
+  } else if (typeof self !== "undefined") {
+    self.global = self;
+  } else {
+    throw new Error(
+      "cannot export Go (neither global, window nor self is defined)"
+    );
+  }
 
-    if (!global.require && typeof require !== "undefined") {
-        global.require = require;
-    }
+  if (!global.require && typeof require !== "undefined") {
+    global.require = require;
+  }
 
-    const enosys = () => {
-        const err = new Error("not implemented");
-        err.code = "ENOSYS";
-        return err;
+  const enosys = () => {
+    const err = new Error("not implemented");
+    err.code = "ENOSYS";
+    return err;
+  };
+
+  if (!global.fs) {
+    global.fs = fs;
+  }
+
+  if (!global.process) {
+    global.process = {
+      getuid() {
+        return -1;
+      },
+      getgid() {
+        return -1;
+      },
+      geteuid() {
+        return -1;
+      },
+      getegid() {
+        return -1;
+      },
+      getgroups() {
+        throw enosys();
+      },
+      pid: -1,
+      ppid: -1,
+      umask() {
+        throw enosys();
+      },
+      cwd() {
+        throw enosys();
+      },
+      chdir() {
+        throw enosys();
+      },
     };
+  }
 
-    if (!global.fs) {
-        global.fs = fs;
-    }
+  if (!global.crypto) {
+    const nodeCrypto = require("crypto");
+    global.crypto = {
+      getRandomValues(b) {
+        nodeCrypto.randomFillSync(b);
+      },
+    };
+  }
 
-    if (!global.process) {
-        global.process = {
-            getuid() { return -1; },
-            getgid() { return -1; },
-            geteuid() { return -1; },
-            getegid() { return -1; },
-            getgroups() { throw enosys(); },
-            pid: -1,
-            ppid: -1,
-            umask() { throw enosys(); },
-            cwd() { throw enosys(); },
-            chdir() { throw enosys(); },
-        }
-    }
+  if (!global.performance) {
+    global.performance = {
+      now() {
+        const [sec, nsec] = process.hrtime();
+        return sec * 1000 + nsec / 1000000;
+      },
+    };
+  }
 
-    if (!global.crypto) {
-        const nodeCrypto = require("crypto");
-        global.crypto = {
-            getRandomValues(b) {
-                nodeCrypto.randomFillSync(b);
-            },
-        };
-    }
+  if (!global.TextEncoder) {
+    global.TextEncoder = require("util").TextEncoder;
+  }
 
-    if (!global.performance) {
-        global.performance = {
-            now() {
-                const [sec, nsec] = process.hrtime();
-                return sec * 1000 + nsec / 1000000;
-            },
-        };
-    }
-
-    if (!global.TextEncoder) {
-        global.TextEncoder = require("util").TextEncoder;
-    }
-
-    if (!global.TextDecoder) {
-        global.TextDecoder = require("util").TextDecoder;
-    }
+  if (!global.TextDecoder) {
+    global.TextDecoder = require("util").TextDecoder;
+  }
 }

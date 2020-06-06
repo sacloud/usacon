@@ -38,15 +38,15 @@ const getWAPMUrlForCommandName = async (commandName: string) => {
     mode: "cors",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       operationName: "shellGetCommandQuery",
       query: WAPM_GRAPHQL_QUERY,
       variables: {
-        command: commandName
-      }
-    })
+        command: commandName,
+      },
+    }),
   });
   const response = await fetchResponse.json();
 
@@ -84,9 +84,12 @@ const getWasmBinaryFromUrl = async (url: string) => {
   return new Uint8Array(buffer);
 };
 
-export const fetchCommandFromWAPM = async ({args,  env}: {
-  args: Array<string>,
-  env?: {[key: string]: string},
+export const fetchCommandFromWAPM = async ({
+  args,
+  env,
+}: {
+  args: Array<string>;
+  env?: { [key: string]: string };
 }) => {
   let commandName = args[0];
   const commandUrl = await getWAPMUrlForCommandName(commandName);

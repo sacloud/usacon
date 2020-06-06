@@ -15,14 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React from "react";
 
 function App() {
-  return (
-    <div className="App">
-        not implemented yet
-    </div>
-  );
+  return <div className="App">not implemented yet</div>;
 }
 
 export default App;
