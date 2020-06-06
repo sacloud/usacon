@@ -18,6 +18,7 @@
 import WasmTerminal from "./wasm-terminal";
 import {WasmFs} from "@wasmer/wasmfs";
 import {BuiltinCommands} from "./commands";
+import {CommandType, CommandValue} from "./wasm-terminal/wasm-terminal-config";
 
 const usaconBanner =
     `=============================================================================\x1B[37m
@@ -57,36 +58,23 @@ export class Console {
     }
 
     private async init() {
-        BuiltinCommands.map(async c => {
-            await this.installGoWasmCommand(c.name, await c.data());
-        })
-    }
-
-    private async installGoWasmCommand(name: string, data: Uint8Array) {
-        const path = `/bin/${name}`;
-        if (!this.exists(path)) {
-            this.wasmFs.fs.mkdirpSync("/bin");
-            this.wasmFs.fs.writeFileSync(path, data);
-        }
+        BuiltinCommands
+            .filter(c => c.needInstall(this.wasmFs))
+            .map(async c => await c.install(this.wasmFs));
     }
 
     private async fetch({args, env}: {
         args: Array<string>,
         env?: { [key: string]: string },
     }) {
-        const commandPath = `/bin/${args[0]}`;
-        if (this.exists(commandPath)) {
-            const data = this.wasmFs.fs.readFileSync(commandPath);
-            if (typeof data !== "string") {
-                return new Uint8Array(data);
-            }
-            throw new Error(`command '${args[0]}' has invalid file format`);
+        const commandName = args[0];
+        const commandDef = BuiltinCommands.find(c => c.name === commandName);
+        if (!commandDef) {
+            throw new Error(`command '${commandName}' not found`);
         }
-        throw new Error(`command '${args[0]}' not found`);
-    }
 
-    private exists(path: string): boolean {
-        return this.wasmFs.fs.existsSync(path);
+        const data = await commandDef.fetchCommand(this.wasmFs);
+        return {type: commandDef.type, value: data};
     }
 }
 

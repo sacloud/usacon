@@ -16,9 +16,31 @@
  */
 
 import * as processWorker from "./wasm-terminal/workers/process.worker";
-import { WASI } from "@wasmer/wasi";
-import BrowserWASIBindings from "@wasmer/wasi/lib/bindings/browser";
+import { WASI , WASIBindings, WASIExitError, WASIKillError} from "@wasmer/wasi";
+import hrtime from "@wasmer/wasi/lib/polyfills/browser-hrtime";
 
-WASI.defaultBindings = BrowserWASIBindings;
+// @ts-ignore
+import * as randomfill from "randomfill";
+// @ts-ignore
+import * as path from "path-browserify";
 
+import getBigIntHrtime from "@wasmer/wasi/lib/polyfills/hrtime.bigint";
+
+const bindings: WASIBindings = {
+    hrtime: getBigIntHrtime(hrtime),
+    exit: (code: number | null) => {
+        throw new WASIExitError(code);
+    },
+    kill: (signal: string) => {
+        throw new WASIKillError(signal);
+    },
+    randomFillSync: randomfill.randomFillSync,
+    isTTY: () => true,
+    path: path,
+
+    // Let the user attach the fs at runtime
+    fs: null
+};
+
+WASI.defaultBindings = bindings;
 export default processWorker;

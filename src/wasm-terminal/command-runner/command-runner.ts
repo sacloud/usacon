@@ -25,6 +25,7 @@ import CommandOptions from "../command/command-options";
 import WasmTerminalConfig from "../wasm-terminal-config";
 import WasmTty from "../wasm-tty/wasm-tty";
 import IoDeviceWindow from "../io-device-window/io-device-window";
+import {type} from "os";
 
 const isFunction = (value: any) => value && (Object.prototype.toString.call(value) === "[object Function]" || "function" === typeof value || value instanceof Function);
 
@@ -478,25 +479,33 @@ export default class CommandRunner {
       env
     });
 
-    // TODO GoWasm/WASI/Callbackの3つに分岐させる。当面はGoWasm/Callbackのみとする
-    if (response instanceof Uint8Array) {
-      // Compile the Wasm Module
-      const wasmModule = await WebAssembly.compile(response);
-
-      commandOptions.unshift({
-        args,
-        env,
-        module: wasmModule
-      });
-    } else if (isFunction(response)) {
-      commandOptions.unshift({
-        args,
-        env,
-        // @ts-ignore
-        callback: response
-      });
-    } else {
-      commandOptions.unshift(response as any);
+    switch (response.type) {
+      case "GoWasm":
+      case "WASI":
+        // TODO cache
+        const wasmModule = await WebAssembly.compile(response.value as Uint8Array);
+        commandOptions.unshift({
+          args,
+          env,
+          module: wasmModule,
+          type: response.type,
+        });
+        break;
+        break;
+      case "Callback":
+        commandOptions.unshift({
+          args,
+          env,
+          // @ts-ignore
+          callback: response.value,
+          type:response.type,
+        });
+        break;
+      case "Options":
+        commandOptions.unshift(response.value as any);
+        break;
+      default:
+        throw new Error("invalid fetch response type");
     }
 
     return commandOptions;

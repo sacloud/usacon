@@ -22,7 +22,6 @@ import { WasmFs } from "@wasmer/wasmfs";
 // The class for WASI Commands
 export default class CallbackCommand extends Command {
   callback: Function;
-  stdoutCallback?: Function;
 
   constructor(options: CommandOptions) {
     super(options);
@@ -37,9 +36,7 @@ export default class CallbackCommand extends Command {
   }
 
   async run(wasmFs: WasmFs) {
-    // let myArr = new Uint8Array(1024);
-    // let pipedStdinData = this.wasmFs.fs.readSync(0, myArr, 0, 1024, 0);
-    let str = await Promise.resolve(this.callback(this.options, wasmFs));
+    let str = await Promise.resolve(this.callback(this.options.args, wasmFs));
     if (typeof str == "string") {
       wasmFs.fs.writeFileSync(
         "/dev/stdout",
