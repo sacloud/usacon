@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import {CommandType} from "../wasm-terminal-config";
 
 // Class that contains the "Options" for contructing and creating commands in a process
 
 type CommandOptions = {
+  type: CommandType
   args: string[];
   env: { [key: string]: string };
   preopens?: { [key: string]: string };

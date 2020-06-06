@@ -25,6 +25,8 @@
     "@wasmer/wasi": "^0.11.2",
     "@wasmer/wasmfs": "^0.11.2",
     "comlink": "^4.3.0",
+    "path-browserify": "^1.0.1",
+    "randomfill": "^1.0.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "shell-parse": "^0.0.2",

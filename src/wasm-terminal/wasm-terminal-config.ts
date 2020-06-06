@@ -20,17 +20,23 @@
 import { WasmFs } from "@wasmer/wasmfs";
 import CommandOptions from "./command/command-options";
 
+export type CommandType = "GoWasm" | "WASI" | "Callback" | "Options"
+export type CommandValue = {
+  type: CommandType,
+  value: Uint8Array | CallbackCommand | CommandOptions
+}
+
 // A Custom command is a function that takes in a stdin string, and an array of argument strings,
 // And returns an stdout string, or undefined.
 export type CallbackCommand = (
   args: string[],
-  stdin: string
+  wasmFs:WasmFs
 ) => Promise<string>;
 
 type FetchCommandFunction = (options: {
   args: Array<string>,
   env?: {[key: string]: string}
-}) => Promise<Uint8Array | CallbackCommand | CommandOptions>;
+}) => Promise<CommandValue>;
 
 export default class WasmTerminalConfig {
   fetchCommand: FetchCommandFunction;
