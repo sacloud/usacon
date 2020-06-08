@@ -15,6 +15,7 @@
  */
 
 export interface APIKeyView {
+  name: string;
   token: string;
   secret: string;
   errors: APIKeyErrors;
@@ -23,18 +24,27 @@ export interface APIKeyView {
 export type APIKeyErrors = Map<string, string>;
 
 export class APIKey implements APIKeyView {
+  name: string;
   token: string;
   secret: string;
   errors: APIKeyErrors;
 
   constructor(v?: APIKeyView) {
+    this.name = v?.name || "";
     this.token = v?.token || "";
     this.secret = v?.secret || "";
     this.errors = v?.errors || new Map<string, string>([]);
   }
 
+  get valid(): boolean {
+    return this.errors.size === 0;
+  }
+
   validate(): void {
     const errors = new Map<string, string>([]);
+    if (this.name === "") {
+      errors.set("name", "required");
+    }
     if (this.token === "") {
       errors.set("token", "required");
     }

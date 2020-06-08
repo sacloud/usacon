@@ -46,7 +46,7 @@
     "watch:production": "webpack --watch --config webpack.prod.js --info-verbosity verbose",
     "start": "webpack-dev-server",
     "start:main": "webpack-dev-server --config webpack.config.js",
-    "start:popup": "webpack-dev-server --config webpack.config.js --open-page=popup.html --open='Google Chrome'",
+    "start:popup": "webpack-dev-server --config webpack.config.js --open-page=popup-test.html --open='Google Chrome'",
     "format": "prettier --write '{src,test}/**/*.{ts,tsx,js,jsx}'",
     "test": "jest"
   },

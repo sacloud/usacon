@@ -53,9 +53,20 @@ const Popup = () => {
   const onSaveButtonClick = () => {
     apiKey.validate();
     updateAPIKey(new APIKey(apiKey));
-    if (apiKey.errors.size === 0) {
-      // TODO send message
-      console.log("TODO send message to the Content Scripts");
+    if (apiKey.valid) {
+      chrome.tabs.query(
+        {
+          active: true,
+          currentWindow: true,
+          url: "https://secure.sakura.ad.jp/cloud/iaas*",
+        },
+        function (tabs) {
+          if (tabs[0] && tabs[0].id) {
+            chrome.tabs.sendMessage(tabs[0].id, apiKey);
+            window.close();
+          }
+        }
+      );
     }
   };
 
@@ -65,6 +76,20 @@ const Popup = () => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Typography variant="body1">UsaCon API Key Settings</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextInput
+              fieldName={"name"}
+              type={"text"}
+              value={apiKey.name}
+              placeholder={"Name"}
+              error={apiKey.errors.has("name")}
+              helperText={apiKey.errors.get("name")}
+              onChange={(e) => {
+                apiKey.name = e.target.value;
+                updateAPIKey(new APIKey(apiKey));
+              }}
+            />
           </Grid>
           <Grid item xs={12}>
             <TextInput
@@ -82,7 +107,7 @@ const Popup = () => {
           </Grid>
           <Grid item xs={12}>
             <TextInput
-              fieldName={"sexret"}
+              fieldName={"secret"}
               type={"text"}
               value={apiKey.secret}
               placeholder={"API Secret"}

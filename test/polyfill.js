@@ -39,3 +39,33 @@ if (typeof global.chrome.runtime.getURL === "undefined") {
     return "./" + url;
   };
 }
+
+if (typeof global.chrome.tabs === "undefined") {
+  global.chrome.tabs = {};
+}
+
+if (typeof global.chrome.tabs.query === "undefined") {
+  global.chrome.tabs.query = function (queryInfo, callback) {
+    console.log(arguments);
+    callback([]);
+  };
+}
+
+if (typeof global.chrome.tabs.sendMessage === "undefined") {
+  global.chrome.tabs.sendMessage = function () {
+    console.log(arguments);
+  };
+}
+
+// Credential Management API
+navigator.credentials.store = function (cred) {
+  return new Promise((resolve) => resolve(cred));
+};
+
+navigator.credentials.get = function () {
+  return new PasswordCredential({
+    name: "fake",
+    id: "fake",
+    password: "fake",
+  });
+};

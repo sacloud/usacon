@@ -22,6 +22,7 @@ import {
   CommandType,
   CommandValue,
 } from "./wasm-terminal/wasm-terminal-config";
+import { getAPIKey } from "./credential";
 
 const usaconBanner = `=============================================================================\x1B[37m
            _   _             _____                       _      
@@ -40,9 +41,10 @@ const usaconBanner = `==========================================================
 Copyright (c) 2020 The UsaCon Authors\x1B[0m
 =============================================================================`;
 
-export class Console {
+export class Usacon {
   wasmFs: WasmFs;
   term: WasmTerminal;
+  additionalEnvs: Map<string, string>;
 
   constructor() {
     this.wasmFs = new WasmFs();
@@ -53,10 +55,23 @@ export class Console {
     });
     this.term.pendingPrintOnOpen = usaconBanner;
     this.term.initializer = this.init.bind(this);
+    this.additionalEnvs = new Map<string, string>();
   }
 
   open(root: HTMLElement) {
     this.term.open(root);
+    this.setAPIKeyToEnvs(false);
+  }
+
+  setAPIKeyToEnvs(required: boolean) {
+    const additionalEnvs = new Map<string, string>();
+    getAPIKey(required).then((cred) => {
+      if (cred !== null) {
+        additionalEnvs.set("SAKURACLOUD_ACCESS_TOKEN", cred.id);
+        additionalEnvs.set("SAKURACLOUD_ACCESS_TOKEN_SECRET", cred.password);
+      }
+      this.additionalEnvs = additionalEnvs;
+    });
   }
 
   private async init() {
@@ -79,6 +94,10 @@ export class Console {
     }
 
     const data = await commandDef.fetchCommand(this.wasmFs);
-    return { type: commandDef.type, value: data };
+    return {
+      type: commandDef.type,
+      value: data,
+      additionalEnvs: this.additionalEnvs,
+    };
   }
 }

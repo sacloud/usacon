@@ -46,10 +46,7 @@ export default class GoWasmCommand extends Command {
 
     this.options.args[0] = "js";
     go.argv = this.options.args;
-
-    // TODO 開発中はFakeモードをデフォルトONにしておく
-    const fakes = { SAKURACLOUD_FAKE_MODE: "1" };
-    go.env = { ...fakes, ...(this.options.env || {}) };
+    go.env = this.options.env || {};
     return go.run(instance);
   }
 }
