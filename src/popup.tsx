@@ -19,11 +19,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./css/popup.css";
 
-import App from "./App";
+import Popup from "./components/Popup";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Popup />
   </React.StrictMode>,
   document.getElementById("root")
 );

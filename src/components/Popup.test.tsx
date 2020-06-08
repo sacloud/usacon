@@ -15,12 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import React from "react";
-import { render } from "@testing-library/react";
-import App from "./App";
+import { renderHook, act } from "@testing-library/react-hooks";
+import Popup from "./Popup";
 
-test("renders learn react link", () => {
-  const { getByText } = render(<App />);
-  const textElement = getByText(/not implemented yet/i);
-  expect(textElement).toBeInTheDocument();
+test("TODO: implements Popup tests", () => {
+  // const { result } = renderHook(() => Popup());
+  //
+  // act(() => {});
+  //
+  // // TODO implements tests
+  // expect(result.current).not.toBeNull();
 });

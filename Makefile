@@ -17,8 +17,15 @@ watch: set-license fmt
 	yarn watch
 
 .PHONY: start
-start: set-license fmt
+start: set-license fmt start-main
+
+.PHONY: start-main
+start-main: set-license fmt
 	yarn start
+
+.PHONY: start-popup
+start-popup: set-license fmt
+	yarn start:popup
 
 .PHONY: test
 test: set-license fmt

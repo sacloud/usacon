@@ -13,6 +13,7 @@
     "url": "https://github.com/sacloud"
   },
   "dependencies": {
+    "@material-ui/core": "^4.10.1",
     "@testing-library/jest-dom": "^5.8.0",
     "@testing-library/react": "^10.0.4",
     "@testing-library/user-event": "^7.1.2",
@@ -44,6 +45,8 @@
     "build:production": "webpack --config webpack.prod.js",
     "watch:production": "webpack --watch --config webpack.prod.js --info-verbosity verbose",
     "start": "webpack-dev-server",
+    "start:main": "webpack-dev-server --config webpack.config.js",
+    "start:popup": "webpack-dev-server --config webpack.config.js --open-page=popup.html --open='Google Chrome'",
     "format": "prettier --write '{src,test}/**/*.{ts,tsx,js,jsx}'",
     "test": "jest"
   },
@@ -70,6 +73,8 @@
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
+    "@babel/preset-typescript": "^7.10.1",
+    "@testing-library/react-hooks": "^3.3.0",
     "@types/chrome": "^0.0.114",
     "babel-jest": "^26.0.1",
     "copy-webpack-plugin": "^6.0.1",
