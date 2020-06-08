@@ -18,22 +18,24 @@
 import "./css/content.css";
 import "./css/xterm.css";
 import "./css/xterm_customize.css";
-import { Console } from "./console";
+import { Usacon } from "./usacon";
+import { saveAPIKeyToBrowser } from "./credential";
+import APIKey from "./api-key";
 
 const rootId = "chrome-sacloud-console-root";
+const usacon = new Usacon();
 
 function init() {
-  const root = initRootElement();
-  const console = new Console();
-  console.open(root);
+  const root = rootElement();
+  usacon.open(root);
 }
 
-function initRootElement(): HTMLElement {
+function rootElement(): HTMLElement {
   let root = document.getElementById(rootId);
-  if (!root) {
-    root = createRootElement();
+  if (root) {
+    return root;
   }
-  return root;
+  return createRootElement();
 }
 
 function createRootElement(): HTMLElement {
@@ -46,7 +48,15 @@ function createRootElement(): HTMLElement {
   return root;
 }
 
-// entry point
+// initialize UI elements
 window.addEventListener("load", (e: Event) => {
   init();
+});
+
+// we always need credential chooser
+navigator.credentials.preventSilentAccess();
+
+// initialize message passing
+chrome.runtime.onMessage.addListener((request) => {
+  saveAPIKeyToBrowser(request);
 });

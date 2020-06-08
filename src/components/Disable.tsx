@@ -16,29 +16,32 @@
  */
 
 import React from "react";
-import ReactDOM from "react-dom";
-import "./css/popup.css";
+import { Link, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
-import Popup from "./components/Popup";
-import Disable from "./components/Disable";
-
-let isSacloudControlPanelOpen = false;
-chrome.tabs.query(
-  {
-    active: true,
-    currentWindow: true,
-    url: "https://secure.sakura.ad.jp/cloud/iaas*",
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: theme.spacing(1),
+    padding: theme.spacing(1),
+    minWidth: "400px",
   },
-  function (tabs) {
-    if (tabs[0] && tabs[0].id) {
-      console.log("hoge1");
-      isSacloudControlPanelOpen = true;
-    }
-    ReactDOM.render(
-      <React.StrictMode>
-        {isSacloudControlPanelOpen ? <Popup /> : <Disable />}
-      </React.StrictMode>,
-      document.getElementById("root")
-    );
-  }
-);
+}));
+
+const Disable = () => {
+  const classes = useStyles();
+  const preventDefault = (event: React.SyntheticEvent) =>
+    event.preventDefault();
+
+  return (
+    <div className={classes.root}>
+      <Typography variant="body1">
+        UsaCon is only available under{" "}
+        <Link href="#" onClick={preventDefault}>
+          https://secure.sakura.ad.jp/cloud/iaas
+        </Link>
+      </Typography>
+    </div>
+  );
+};
+
+export default Disable;

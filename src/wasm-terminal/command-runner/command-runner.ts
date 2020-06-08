@@ -483,6 +483,10 @@ export default class CommandRunner {
       env,
     });
 
+    if (response.additionalEnvs) {
+      env = { ...env, ...Object.fromEntries(response.additionalEnvs) };
+    }
+
     switch (response.type) {
       case "GoWasm":
       case "WASI":

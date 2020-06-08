@@ -24,6 +24,7 @@ export type CommandType = "GoWasm" | "WASI" | "Callback" | "Options";
 export type CommandValue = {
   type: CommandType;
   value: Uint8Array | CallbackCommand | CommandOptions;
+  additionalEnvs: Map<string, string>;
 };
 
 // A Custom command is a function that takes in a stdin string, and an array of argument strings,
