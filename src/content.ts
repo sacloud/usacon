@@ -15,48 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import "./css/content.css";
+import React from "react";
+import ReactDOM from "react-dom";
+import BottomDrawer from "./components/BottomDrawer";
 import "./css/xterm.css";
 import "./css/xterm_customize.css";
-import { Usacon } from "./usacon";
-import { saveAPIKeyToBrowser } from "./credential";
-import APIKey from "./api-key";
 
 const rootId = "chrome-sacloud-console-root";
-const usacon = new Usacon();
 
-function init() {
-  const root = rootElement();
-  usacon.open(root);
-}
-
-function rootElement(): HTMLElement {
-  let root = document.getElementById(rootId);
-  if (root) {
-    return root;
-  }
-  return createRootElement();
-}
-
-function createRootElement(): HTMLElement {
+function createRootElement() {
   let root = document.createElement("div");
   root.setAttribute("id", rootId);
 
   let parents = document.getElementsByTagName("body");
   parents[0].appendChild(root);
 
-  return root;
+  ReactDOM.render(
+    React.createElement(BottomDrawer, {}, null),
+    document.getElementById(rootId)
+  );
 }
 
 // initialize UI elements
-window.addEventListener("load", (e: Event) => {
-  init();
-});
+createRootElement();
 
-// we always need credential chooser
-navigator.credentials.preventSilentAccess();
-
-// initialize message passing
-chrome.runtime.onMessage.addListener((request) => {
-  saveAPIKeyToBrowser(request);
-});
+// initialize message handling between the content script and the background script.
+chrome.runtime.sendMessage({ type: "usacon.showPageAction" }); // start page action(enable browser extension icon)

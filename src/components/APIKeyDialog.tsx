@@ -15,16 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+import React from "react";
+import { Dialog } from "@material-ui/core";
+import APIKeyInput from "./APIKeyInput";
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+type Props = {
+  open: boolean;
+  onClose?: () => void;
+};
+
+const APIKeyDialog: React.FC<Props> = (props: Props) => {
+  return (
+    <Dialog open={props.open}>
+      <APIKeyInput onClose={props.onClose} />
+    </Dialog>
+  );
+};
+
+export default APIKeyDialog;

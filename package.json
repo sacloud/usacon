@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.10.1",
+    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^5.8.0",
     "@testing-library/react": "^10.0.4",
     "@testing-library/user-event": "^7.1.2",
@@ -44,9 +45,8 @@
     "watch": "webpack --watch --config webpack.config.js --info-verbosity verbose",
     "build:production": "webpack --config webpack.prod.js",
     "watch:production": "webpack --watch --config webpack.prod.js --info-verbosity verbose",
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --config webpack.config.js",
     "start:main": "webpack-dev-server --config webpack.config.js",
-    "start:popup": "webpack-dev-server --config webpack.config.js --open-page=popup-test.html --open='Google Chrome'",
     "format": "prettier --write '{src,test}/**/*.{ts,tsx,js,jsx}'",
     "test": "jest"
   },

@@ -20,9 +20,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
     mode: "production",
     entry: {
-        popup: './src/popup.tsx',
         content: './src/content.ts',
-        worker: './src/worker.ts'
+        worker: './src/worker.ts',
+        background: './src/background.ts'
     },
     output: {
         filename: '[name].bundle.js',

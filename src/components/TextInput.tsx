@@ -27,14 +27,6 @@ const useStyles = makeStyles({
     borderRadius: 5,
     width: "380px",
   },
-  base: {
-    padding: "3px 0 3px",
-  },
-  error: {
-    border: "2px solid red",
-    borderRadius: 5,
-    backgroundColor: red[50],
-  },
 });
 
 type Props = {
@@ -45,6 +37,7 @@ type Props = {
   error: boolean;
   helperText?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  autoComplete?: string;
 };
 
 const TextInput: React.FC<Props> = (props: Props) => {
@@ -54,8 +47,8 @@ const TextInput: React.FC<Props> = (props: Props) => {
   return (
     <TextField
       id={`${props.fieldName}-id`}
+      autoComplete={props.autoComplete ? props.autoComplete : ""}
       type={props.type}
-      //inputProps={{ error:classes.error, input: classes.base }}
       className={classes.inputs}
       placeholder={`* ${placeholder}`}
       error={props.error}

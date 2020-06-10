@@ -23,6 +23,11 @@ import { WebLinksAddon } from "xterm-addon-web-links";
 import WasmTerminalConfig from "./wasm-terminal-config";
 import WasmTty from "./wasm-tty/wasm-tty";
 import WasmShell from "./wasm-shell/wasm-shell";
+import {
+  disposeObserver,
+  newResizeObserver,
+  observeElement,
+} from "./resize-observer";
 
 const Terminal = xtermDefault.Terminal || xterm.Terminal;
 // import { WebglAddon } from 'xterm-addon-webgl';
@@ -46,6 +51,8 @@ export default class WasmTerminal {
 
   isOpen: boolean;
   pendingPrintOnOpen: string;
+
+  resizeObserver: any;
 
   constructor(config: any) {
     this.wasmTerminalConfig = new WasmTerminalConfig(config);
@@ -87,9 +94,18 @@ export default class WasmTerminal {
     this.isOpen = false;
     this.pendingPrintOnOpen = "";
     this.initializer = undefined;
+
+    this.resizeObserver = newResizeObserver(() => {
+      if (this.xterm.isOpen) {
+        this.fit();
+      }
+    });
   }
 
   open(container: HTMLElement) {
+    if (this.xterm.isOpen) {
+      return;
+    }
     // Remove any current event listeners
     const focusHandler = this.focus.bind(this);
     if (this.container !== undefined) {
@@ -99,10 +115,10 @@ export default class WasmTerminal {
       });
     }
 
-    this.container = container;
+    observeElement(this.resizeObserver, container);
 
+    this.container = container;
     this.xterm.open(container);
-    this.fit();
     // this.xterm.loadAddon(new WebglAddon());
 
     const initFunc = () => {
@@ -216,6 +232,9 @@ export default class WasmTerminal {
   }
 
   destroy() {
+    if (this.container) {
+      disposeObserver(this.resizeObserver, this.container);
+    }
     this.xterm.dispose();
     delete this.xterm;
   }
