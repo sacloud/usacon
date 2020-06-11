@@ -20,6 +20,7 @@ import ReactDOM from "react-dom";
 import BottomDrawer from "./components/BottomDrawer";
 import "./css/xterm.css";
 import "./css/xterm_customize.css";
+import { Usacon } from "./usacon";
 
 const rootId = "chrome-sacloud-console-root";
 
@@ -31,7 +32,7 @@ function createRootElement() {
   parents[0].appendChild(root);
 
   ReactDOM.render(
-    React.createElement(BottomDrawer, {}, null),
+    React.createElement(BottomDrawer, { usacon: new Usacon() }, null),
     document.getElementById(rootId)
   );
 }

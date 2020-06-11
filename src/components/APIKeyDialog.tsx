@@ -26,7 +26,7 @@ type Props = {
 
 const APIKeyDialog: React.FC<Props> = (props: Props) => {
   return (
-    <Dialog open={props.open}>
+    <Dialog open={props.open} onClose={props.onClose}>
       <APIKeyInput onClose={props.onClose} />
     </Dialog>
   );
