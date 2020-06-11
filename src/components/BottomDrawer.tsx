@@ -17,12 +17,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import { AppBar, IconButton, Toolbar } from "@material-ui/core";
+import {
+  AppBar,
+  IconButton,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
-import VpnKeyRoundedIcon from "@material-ui/icons/VpnKeyRounded";
 import APIKeyDialog from "./APIKeyDialog";
 import ConsoleWrapper from "./ConsoleWrapper";
 import { Usacon } from "../usacon";
+import CurrentAPIKey from "./CurrentAPIKey";
+import { AddCircleRounded } from "@material-ui/icons";
 
 const defaultDrawerHeight = 500;
 const minDrawerHeight = 50;
@@ -31,6 +38,7 @@ const maxDrawerHeight = 800;
 const useStyles = makeStyles((theme) => ({
   toolBar: {
     minHeight: 48,
+    paddingRight: 5,
   },
   logo: {
     maxHeight: 40,
@@ -56,7 +64,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export type BottomDrawerProps = {};
+export type BottomDrawerProps = {
+  usacon: Usacon;
+};
 
 const BottomDrawer: React.FC<BottomDrawerProps> = (props) => {
   const classes = useStyles();
@@ -64,7 +74,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = (props) => {
   const [drawerHeight, setDrawerHeight] = React.useState(defaultDrawerHeight);
   const [apiKeyInputOpen, setAPIKeyInputOpen] = React.useState(false);
   const ref = React.createRef<HTMLDivElement>();
-  const usacon = new Usacon();
 
   useEffect(() => {
     const consoleRoot = ref.current;
@@ -74,8 +83,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = (props) => {
         message.type === "usacon.toggleConsoleVisible"
       ) {
         setOpen((current) => !current);
-        if (consoleRoot && !usacon.isOpen) {
-          usacon.open(consoleRoot);
+        if (consoleRoot && !props.usacon.isOpen) {
+          props.usacon.open(consoleRoot);
         }
       }
     });
@@ -97,11 +106,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = (props) => {
     const newHeight = window.innerHeight - e.clientY;
     if (newHeight > minDrawerHeight && newHeight < maxDrawerHeight) {
       setDrawerHeight(newHeight);
-      usacon.term.fit();
+      props.usacon.term.fit();
     }
   }, []);
 
   const handleAPIKeyButtonClick = () => {
+    navigator.credentials.preventSilentAccess();
     setAPIKeyInputOpen(true);
   };
 
@@ -132,20 +142,26 @@ const BottomDrawer: React.FC<BottomDrawerProps> = (props) => {
               className={classes.logo}
             />
             <div className={classes.icons}>
-              <IconButton
-                edge="start"
-                color="primary"
-                onClick={handleAPIKeyButtonClick}
-              >
-                <VpnKeyRoundedIcon />
-              </IconButton>
-              <IconButton
-                edge="start"
-                color="secondary"
-                onClick={handleCloseButtonClick}
-              >
-                <CancelRoundedIcon />
-              </IconButton>
+              <CurrentAPIKey usacon={props.usacon} />
+              <Tooltip title="Add API Key">
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleAPIKeyButtonClick}
+                >
+                  <AddCircleRounded />
+                  <Typography variant="body1">Add API Key</Typography>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Close">
+                <IconButton
+                  edge="start"
+                  color="default"
+                  onClick={handleCloseButtonClick}
+                >
+                  <CancelRoundedIcon />
+                </IconButton>
+              </Tooltip>
             </div>
           </Toolbar>
         </AppBar>

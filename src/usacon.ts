@@ -23,6 +23,7 @@ import {
   CommandValue,
 } from "./wasm-terminal/wasm-terminal-config";
 import { getAPIKey } from "./credential";
+import APIKey from "./api-key";
 
 const usaconBanner = `=============================================================================\x1B[37m
            _   _             _____                       _      
@@ -44,8 +45,8 @@ Copyright (c) 2020 The UsaCon Authors\x1B[0m
 export class Usacon {
   wasmFs: WasmFs;
   term: WasmTerminal;
-  additionalEnvs: Map<string, string>;
-  onOpen?: () => void;
+
+  apiKey?: APIKey;
 
   constructor() {
     this.wasmFs = new WasmFs();
@@ -56,7 +57,7 @@ export class Usacon {
     });
     this.term.pendingPrintOnOpen = usaconBanner;
     this.term.initializer = this.init.bind(this);
-    this.additionalEnvs = new Map<string, string>();
+    this.apiKey = undefined;
   }
 
   open(root: HTMLElement) {
@@ -65,7 +66,6 @@ export class Usacon {
     }
     this.term.open(root);
     this.term.fit();
-    this.setAPIKeyToEnvs(false);
   }
 
   get isOpen(): boolean {
@@ -76,17 +76,6 @@ export class Usacon {
     if (this.term.isOpen) {
       this.term.fit();
     }
-  }
-
-  setAPIKeyToEnvs(required: boolean) {
-    const additionalEnvs = new Map<string, string>();
-    getAPIKey(required).then((cred) => {
-      if (cred !== null) {
-        additionalEnvs.set("SAKURACLOUD_ACCESS_TOKEN", cred.id);
-        additionalEnvs.set("SAKURACLOUD_ACCESS_TOKEN_SECRET", cred.password);
-      }
-      this.additionalEnvs = additionalEnvs;
-    });
   }
 
   private async init() {
@@ -109,10 +98,19 @@ export class Usacon {
     }
 
     const data = await commandDef.fetchCommand(this.wasmFs);
+
+    const additionalEnvs = new Map<string, string>();
+    if (this.apiKey) {
+      additionalEnvs.set("SAKURACLOUD_ACCESS_TOKEN", this.apiKey.token);
+      additionalEnvs.set("SAKURACLOUD_ACCESS_TOKEN_SECRET", this.apiKey.secret);
+    } else {
+      additionalEnvs.set("SAKURACLOUD_FAKE_MODE", "1");
+    }
+
     return {
       type: commandDef.type,
       value: data,
-      additionalEnvs: this.additionalEnvs,
+      additionalEnvs: additionalEnvs,
     };
   }
 }
