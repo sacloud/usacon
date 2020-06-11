@@ -1,6 +1,6 @@
 {
   "name": "usacon",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "A browser extension for using SakuraCloud CLI in the control panel",
   "private": true,
   "repository": {
