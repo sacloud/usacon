@@ -26,6 +26,7 @@ import { APIKey } from "../api-key";
 import { red } from "@material-ui/core/colors";
 import TextInput from "./TextInput";
 import { Button, Grid, Typography } from "@material-ui/core";
+import { saveAPIKeyToBrowser } from "../credential";
 
 const theme = createMuiTheme({
   palette: {
@@ -44,9 +45,16 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     backgroundColor: red[50],
   },
+  buttons: {
+    marginRight: "10px",
+  },
 }));
 
-const Popup = () => {
+type Props = {
+  onClose?: () => void;
+};
+
+const APIKeyInput: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
   const [apiKey, updateAPIKey] = useState(new APIKey());
 
@@ -54,20 +62,20 @@ const Popup = () => {
     apiKey.validate();
     updateAPIKey(new APIKey(apiKey));
     if (apiKey.valid) {
-      chrome.tabs.query(
-        {
-          active: true,
-          currentWindow: true,
-          url: "https://secure.sakura.ad.jp/cloud/iaas*",
-        },
-        function (tabs) {
-          if (tabs[0] && tabs[0].id) {
-            chrome.tabs.sendMessage(tabs[0].id, apiKey);
-            window.close();
-          }
+      saveAPIKeyToBrowser(apiKey).then(() => {
+        if (props.onClose) {
+          props.onClose();
         }
-      );
+        // clear
+        updateAPIKey(new APIKey());
+      });
     }
+  };
+  const onCancelButtonClick = () => {
+    if (props.onClose) {
+      props.onClose();
+    }
+    updateAPIKey(new APIKey());
   };
 
   return (
@@ -99,6 +107,7 @@ const Popup = () => {
               placeholder={"API Token"}
               error={apiKey.errors.has("token")}
               helperText={apiKey.errors.get("token")}
+              autoComplete={"new-password"}
               onChange={(e) => {
                 apiKey.token = e.target.value;
                 updateAPIKey(new APIKey(apiKey));
@@ -108,11 +117,12 @@ const Popup = () => {
           <Grid item xs={12}>
             <TextInput
               fieldName={"secret"}
-              type={"text"}
+              type={"password"}
               value={apiKey.secret}
               placeholder={"API Secret"}
               error={apiKey.errors.has("secret")}
               helperText={apiKey.errors.get("secret")}
+              autoComplete={"new-password"}
               onChange={(e) => {
                 apiKey.secret = e.target.value;
                 updateAPIKey(new APIKey(apiKey));
@@ -124,8 +134,17 @@ const Popup = () => {
               variant="contained"
               color="primary"
               onClick={onSaveButtonClick}
+              className={classes.buttons}
             >
               Save to the Browser
+            </Button>
+            <Button
+              variant="contained"
+              color="default"
+              onClick={onCancelButtonClick}
+              className={classes.buttons}
+            >
+              Cancel
             </Button>
           </Grid>
         </Grid>
@@ -134,4 +153,4 @@ const Popup = () => {
   );
 };
 
-export default Popup;
+export default APIKeyInput;

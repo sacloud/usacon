@@ -15,12 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#chrome-sacloud-console-root {
-    position: absolute;
-    top: 400px;
-    left: 200px;
-    display: block;
-    z-index: 1;
-    width: 1200px;
-    height: 400px;
-}
+import { renderHook, act } from "@testing-library/react-hooks";
+import APIKeyInput from "./APIKeyInput";
+
+test("TODO: implements Popup tests", () => {
+  // const { result } = renderHook(() => Popup());
+  //
+  // act(() => {});
+  //
+  // // TODO implements tests
+  // expect(result.current).not.toBeNull();
+});

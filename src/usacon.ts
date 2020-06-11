@@ -45,6 +45,7 @@ export class Usacon {
   wasmFs: WasmFs;
   term: WasmTerminal;
   additionalEnvs: Map<string, string>;
+  onOpen?: () => void;
 
   constructor() {
     this.wasmFs = new WasmFs();
@@ -59,8 +60,22 @@ export class Usacon {
   }
 
   open(root: HTMLElement) {
+    if (this.isOpen) {
+      return;
+    }
     this.term.open(root);
+    this.term.fit();
     this.setAPIKeyToEnvs(false);
+  }
+
+  get isOpen(): boolean {
+    return this.term.isOpen;
+  }
+
+  fit() {
+    if (this.term.isOpen) {
+      this.term.fit();
+    }
   }
 
   setAPIKeyToEnvs(required: boolean) {
