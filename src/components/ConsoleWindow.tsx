@@ -19,6 +19,7 @@ import ConsoleToolBar from "./ConsoleToolBar";
 import ConsoleWrapper from "./ConsoleWrapper";
 import HeightResizablePane from "./HeightResizablePane";
 import { Usacon } from "../usacon";
+import { UsaConMessageKeys } from "../message-keys";
 
 export type BottomDrawerProps = {
   usacon: Usacon;
@@ -33,7 +34,7 @@ const ConsoleWindow: React.FC<BottomDrawerProps> = (props) => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (
         typeof message === "object" &&
-        message.type === "usacon.toggleConsoleVisible"
+        message.type === UsaConMessageKeys.ToggleWindowVisible
       ) {
         setOpen((current) => !current);
         if (consoleRoot && !props.usacon.isOpen) {
