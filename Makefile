@@ -33,6 +33,7 @@ test: set-license fmt
 
 .PHONY: tools
 tools:
+	yarn install
 	go install github.com/sacloud/addlicense
 
 .PHONY: clean
