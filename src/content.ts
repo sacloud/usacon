@@ -17,14 +17,15 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import BottomDrawer from "./components/BottomDrawer";
 import "./css/xterm.css";
 import "./css/xterm_customize.css";
 import { Usacon } from "./usacon";
+import ConsoleWindow from "./components/ConsoleWindow";
 
 const rootId = "chrome-sacloud-console-root";
 
-function createRootElement() {
+function initialize() {
+  // create element for rendering the UsaCon window
   let root = document.createElement("div");
   root.setAttribute("id", rootId);
 
@@ -32,13 +33,13 @@ function createRootElement() {
   parents[0].appendChild(root);
 
   ReactDOM.render(
-    React.createElement(BottomDrawer, { usacon: new Usacon() }, null),
+    React.createElement(ConsoleWindow, { usacon: new Usacon() }, null),
     document.getElementById(rootId)
   );
 }
 
 // initialize UI elements
-createRootElement();
+initialize();
 
 // initialize message handling between the content script and the background script.
 chrome.runtime.sendMessage({ type: "usacon.showPageAction" }); // start page action(enable browser extension icon)
