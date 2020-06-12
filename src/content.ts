@@ -21,6 +21,7 @@ import "./css/xterm.css";
 import "./css/xterm_customize.css";
 import { Usacon } from "./usacon";
 import ConsoleWindow from "./components/ConsoleWindow";
+import { UsaConMessageKeys } from "./message-keys";
 
 const rootId = "chrome-sacloud-console-root";
 
@@ -42,4 +43,4 @@ function initialize() {
 initialize();
 
 // initialize message handling between the content script and the background script.
-chrome.runtime.sendMessage({ type: "usacon.showPageAction" }); // start page action(enable browser extension icon)
+chrome.runtime.sendMessage({ type: UsaConMessageKeys.ShowPageAction }); // start page action(enable browser extension icon)

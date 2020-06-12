@@ -15,12 +15,14 @@
  */
 
 // listener: initialize page action
+import { UsaConMessageKeys } from "./message-keys";
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (
     sender.tab &&
     sender.tab.id &&
     typeof message === "object" &&
-    message.type === "usacon.showPageAction"
+    message.type === UsaConMessageKeys.ShowPageAction
   ) {
     chrome.pageAction.show(sender.tab.id);
   }
@@ -30,6 +32,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // listener: on click for page action icon
 chrome.pageAction.onClicked.addListener((tab) => {
   if (tab && tab.id && tab.status === "complete") {
-    chrome.tabs.sendMessage(tab.id, { type: "usacon.toggleConsoleVisible" });
+    chrome.tabs.sendMessage(tab.id, {
+      type: UsaConMessageKeys.ToggleWindowVisible,
+    });
   }
 });
