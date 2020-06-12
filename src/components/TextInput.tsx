@@ -17,12 +17,10 @@
 
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { red } from "@material-ui/core/colors";
 import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles({
   inputs: {
-    // backgroundColor: "white",
     minWidth: "150px",
     borderRadius: 5,
     width: "380px",
