@@ -18,12 +18,9 @@
 import WasmTerminal from "./wasm-terminal";
 import { WasmFs } from "@wasmer/wasmfs";
 import { BuiltinCommands } from "./commands";
-import {
-  CommandType,
-  CommandValue,
-} from "./wasm-terminal/wasm-terminal-config";
-import { getAPIKey } from "./credential";
 import APIKey from "./api-key";
+import * as constants from "constants";
+import Constants from "@sacloud/constants";
 
 const usaconBanner = `=============================================================================\x1B[37m
            _   _             _____                       _      
@@ -84,6 +81,18 @@ export class Usacon {
     );
   }
 
+  private get zoneName(): string {
+    const zoneID = localStorage.getItem("/cloud/::currentZoneId");
+    if (zoneID) {
+      for (const k in Constants.Zone.IDs) {
+        if (Constants.Zone.IDs[k].toString() === zoneID) {
+          return k;
+        }
+      }
+    }
+    return "";
+  }
+
   private async fetch({
     args,
     env,
@@ -106,6 +115,7 @@ export class Usacon {
     } else {
       additionalEnvs.set("SAKURACLOUD_FAKE_MODE", "1");
     }
+    additionalEnvs.set("SAKURACLOUD_ZONE", this.zoneName);
 
     return {
       type: commandDef.type,
