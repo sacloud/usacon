@@ -1342,6 +1342,13 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
+"@sacloud/constants@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@sacloud/constants/-/constants-0.0.3.tgz#c18878436f5c8419fe9c5c3ffd760b3e072ec517"
+  integrity sha512-/SUkQo5TStNFoxHaqefaokq4NZxI0sc6T2Zbeh3HapZWE5UnP7dDyqfdaTMpcpx7y6/BCGcqmktkZn2Vwm2y1w==
+  dependencies:
+    typescript "^3.8.2"
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.0.tgz#c8d68821a854c555bba172f3b06959a0039b236d"
@@ -7822,6 +7829,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typescript@^3.8.2:
+  version "3.9.7"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
+  integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
 
 typescript@^3.9.3:
   version "3.9.3"
