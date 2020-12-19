@@ -88,6 +88,18 @@ const ConsoleToolBar: React.FC<ConsoleToolbarProps> = (props) => {
     setLicenseWindowOpen(true);
   };
 
+  const openHelpPage = () => {
+    const newWindow = window.open(
+      "https://docs.usacloud.jp/usacon/#usage",
+      "_blank",
+      "noopener,noreferrer"
+    );
+    if (newWindow) {
+      newWindow.opener = null;
+    }
+    handleMoreMenuClose();
+  };
+
   return (
     <AppBar color={"default"} position={"relative"}>
       <Toolbar className={classes.toolBar}>
@@ -131,6 +143,9 @@ const ConsoleToolBar: React.FC<ConsoleToolbarProps> = (props) => {
             open={moreMenuOpen}
             onClose={handleMoreMenuClose}
           >
+            <MenuItem onClick={openHelpPage} divider={true}>
+              Help / Documents
+            </MenuItem>
             <MenuItem onClick={handleLicenseWindowOpen}>
               Open source licenses
             </MenuItem>
