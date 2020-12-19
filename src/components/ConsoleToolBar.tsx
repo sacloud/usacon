@@ -28,6 +28,10 @@ import APIKeyDialog from "./APIKeyDialog";
 import { Usacon } from "../usacon";
 import CurrentAPIKey from "./CurrentAPIKey";
 import { AddCircleRounded } from "@material-ui/icons";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import LicenseWindow from "./LicenseWindow";
 
 const useStyles = makeStyles((theme) => ({
   toolBar: {
@@ -50,6 +54,11 @@ export type ConsoleToolbarProps = {
 const ConsoleToolBar: React.FC<ConsoleToolbarProps> = (props) => {
   const classes = useStyles();
   const [apiKeyInputOpen, setAPIKeyInputOpen] = React.useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = React.useState(false);
+  const [licenseWindowOpen, setLicenseWindowOpen] = React.useState(false);
+
+  // for moreMenu
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleAPIKeyButtonClick = () => {
     navigator.credentials.preventSilentAccess();
@@ -62,6 +71,21 @@ const ConsoleToolBar: React.FC<ConsoleToolbarProps> = (props) => {
 
   const handleCloseButtonClick = () => {
     props.setConsoleOpen(false);
+  };
+
+  const handleMoreButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setMoreMenuOpen(true);
+  };
+
+  const handleMoreMenuClose = () => {
+    setMoreMenuOpen(false);
+    setLicenseWindowOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleLicenseWindowOpen = () => {
+    setLicenseWindowOpen(true);
   };
 
   return (
@@ -83,6 +107,39 @@ const ConsoleToolBar: React.FC<ConsoleToolbarProps> = (props) => {
               <Typography variant="body1">Add API Key</Typography>
             </IconButton>
           </Tooltip>
+          <Tooltip title="More">
+            <IconButton
+              edge="start"
+              color="default"
+              onClick={handleMoreButtonClick}
+            >
+              <MoreIcon />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+            open={moreMenuOpen}
+            onClose={handleMoreMenuClose}
+          >
+            <MenuItem onClick={handleLicenseWindowOpen}>
+              Open source licenses
+            </MenuItem>
+          </Menu>
+          <LicenseWindow
+            open={licenseWindowOpen}
+            setOpen={setLicenseWindowOpen}
+            onClose={handleMoreMenuClose}
+          />
           <Tooltip title="Close">
             <IconButton
               edge="start"
