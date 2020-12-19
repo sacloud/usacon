@@ -25,7 +25,6 @@
   "web_accessible_resources": [
     "usacloud.wasm",
     "uutils.wasm",
-    "jq.wasm",
     "worker.bundle.js",
     "usacloud-horizontal.svg"
   ]

@@ -105,17 +105,7 @@ export const BuiltinCommands: CommandDef[] = [
   }),
   new CommandDef({
     type: "WASI",
-    name: "jq",
-    source: chrome.runtime.getURL("jq.wasm"),
-  }),
-  new CommandDef({
-    type: "WASI",
     name: "echo",
-    source: chrome.runtime.getURL("uutils.wasm"),
-  }),
-  new CommandDef({
-    type: "WASI",
-    name: "wc",
     source: chrome.runtime.getURL("uutils.wasm"),
   }),
   new CommandDef({

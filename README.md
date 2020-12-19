@@ -78,19 +78,9 @@ APIキーの名前をクリックすることで選択解除が行えます。
 以下のコマンドが利用可能です。
 
 - `usacloud`
-- `jq`
 - `echo`
 - `env`
-- `wc`
 - `clear` or `cls`
-
-#### パイプの利用
-
-以下のようにパイプが利用可能です。
-
-```sh
-$ usacloud auth-status show -o json | jq .
-```
 
 #### キーボードショートカット
 
