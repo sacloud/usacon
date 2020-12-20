@@ -72,7 +72,7 @@ const CurrentAPIKey: React.FC<Props> = (props: Props) => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleLogout}
-            color="primary"
+            color="secondary"
           >
             <AccountCircle />
             <Typography variant="body1">{apiKey.name}</Typography>
