@@ -112,8 +112,6 @@ export class Usacon {
     if (this.apiKey) {
       additionalEnvs.set("SAKURACLOUD_ACCESS_TOKEN", this.apiKey.token);
       additionalEnvs.set("SAKURACLOUD_ACCESS_TOKEN_SECRET", this.apiKey.secret);
-    } else {
-      additionalEnvs.set("SAKURACLOUD_FAKE_MODE", "1");
     }
     additionalEnvs.set("SAKURACLOUD_ZONE", this.zoneName);
 
