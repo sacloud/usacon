@@ -12,7 +12,7 @@ WebAssemblyを利用しており別途サーバを必要とせずにブラウザ
 
 ### From Chrome Web Store
 
-**TODO ストアに公開したら追記**
+[https://chrome.google.com/webstore/detail/usacon/ihcpjahhejhblhadomiffpnfmfaklpeh](https://chrome.google.com/webstore/detail/usacon/ihcpjahhejhblhadomiffpnfmfaklpeh)
 
 ### From source (for a developer)
 
