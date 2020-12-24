@@ -24,13 +24,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     typeof message === "object" &&
     message.type === UsaConMessageKeys.ShowPageAction
   ) {
-    chrome.pageAction.show(sender.tab.id);
+    chrome.action.show(sender.tab.id);
   }
   return true;
 });
 
 // listener: on click for page action icon
-chrome.pageAction.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener((tab) => {
   if (tab && tab.id && tab.status === "complete") {
     chrome.tabs.sendMessage(tab.id, {
       type: UsaConMessageKeys.ToggleWindowVisible,
