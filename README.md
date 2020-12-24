@@ -12,7 +12,7 @@ WebAssemblyを利用しており別途サーバを必要とせずにブラウザ
 
 ### From Chrome Web Store
 
-[https://chrome.google.com/webstore/detail/usacon/ihcpjahhejhblhadomiffpnfmfaklpeh](https://chrome.google.com/webstore/detail/usacon/ihcpjahhejhblhadomiffpnfmfaklpeh)
+[![UsaCon on Chrome WebStore](images/chrome_web_store.png)](https://chrome.google.com/webstore/detail/usacon/ihcpjahhejhblhadomiffpnfmfaklpeh)
 
 ### From source (for a developer)
 
