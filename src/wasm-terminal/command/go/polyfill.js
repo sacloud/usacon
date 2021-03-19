@@ -65,7 +65,7 @@ export function polyfillForGolang(fs) {
         throw enosys();
       },
       cwd() {
-        throw enosys();
+        return "/";
       },
       chdir() {
         throw enosys();
