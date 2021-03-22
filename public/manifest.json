@@ -6,7 +6,7 @@
   "icons": {
     "128": "icon_128.png"
   },
-  "permissions": ["https://secure.sakura.ad.jp/cloud/iaas*"],
+  "permissions": ["https://secure.sakura.ad.jp/cloud/iaas*", "https://munchkin.marketo.net/*", "https://s.yimg.jp/*", "webRequest", "webRequestBlocking"],
   "content_scripts" : [
     {
       "matches": [ "https://secure.sakura.ad.jp/cloud/iaas*" ],
@@ -15,7 +15,7 @@
   ],
   "background": {
     "scripts": ["background.bundle.js"],
-    "persistent": false
+    "persistent": true
   },
   "page_action": {
     "browser_style": true,
