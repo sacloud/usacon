@@ -57,25 +57,3 @@ chrome.webRequest.onHeadersReceived.addListener(
   { urls: ["https://secure.sakura.ad.jp/cloud/iaas/"] },
   ["blocking", "responseHeaders", "extraHeaders"]
 );
-
-chrome.webRequest.onHeadersReceived.addListener(
-  (details) => {
-    if (!details.responseHeaders) {
-      return;
-    }
-    const header = details.responseHeaders.find(
-      (h) => h.name.toLowerCase() === "cross-origin-resource-policy"
-    );
-    if (header) {
-      header.value = "cross-origin";
-    } else {
-      details.responseHeaders.push({
-        name: "Cross-Origin-Resource-Policy",
-        value: "cross-origin",
-      });
-    }
-    return { responseHeaders: details.responseHeaders };
-  },
-  { urls: ["https://s.yimg.jp/*", "https://munchkin.marketo.net/*"] },
-  ["blocking", "responseHeaders", "extraHeaders"]
-);
