@@ -44,6 +44,13 @@ chrome.webRequest.onHeadersReceived.addListener(
     if (!details.responseHeaders) {
       return;
     }
+    if (
+      !details.responseHeaders.some(
+        (h) => h.name === "Content-Type" && h.value?.startsWith("text/html")
+      )
+    ) {
+      return;
+    }
     details.responseHeaders.push({
       name: "Cross-Origin-Embedder-Policy",
       value: "require-corp",
@@ -54,6 +61,26 @@ chrome.webRequest.onHeadersReceived.addListener(
     });
     return { responseHeaders: details.responseHeaders };
   },
-  { urls: ["https://secure.sakura.ad.jp/cloud/iaas/"] },
+  {
+    urls: ["https://secure.sakura.ad.jp/cloud/iaas/*"],
+  },
+  ["blocking", "responseHeaders", "extraHeaders"]
+);
+
+// set response header modifier for set CORP header
+chrome.webRequest.onHeadersReceived.addListener(
+  (details) => {
+    if (!details.responseHeaders) {
+      return;
+    }
+    details.responseHeaders.push({
+      name: "Cross-Origin-Resource-Policy",
+      value: "cross-origin",
+    });
+    return { responseHeaders: details.responseHeaders };
+  },
+  {
+    urls: ["https://*.cloud.sakura.ad.jp/*"],
+  },
   ["blocking", "responseHeaders", "extraHeaders"]
 );
