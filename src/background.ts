@@ -46,7 +46,10 @@ chrome.webRequest.onHeadersReceived.addListener(
     }
     if (
       !details.responseHeaders.some(
-        (h) => h.name === "Content-Type" && h.value?.startsWith("text/html")
+        (h) =>
+          h.name === "Content-Type" &&
+          (h.value?.startsWith("text/html") ||
+            h.value?.startsWith("text/javascript"))
       )
     ) {
       return;
