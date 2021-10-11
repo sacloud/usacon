@@ -18,7 +18,7 @@
 import React, { useState } from "react";
 
 import {
-  createMuiTheme,
+  createTheme,
   makeStyles,
   MuiThemeProvider,
 } from "@material-ui/core/styles";
@@ -28,7 +28,7 @@ import TextInput from "./TextInput";
 import { Button, Grid, Typography } from "@material-ui/core";
 import { saveAPIKeyToBrowser } from "../credential";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     type: "light",
   },

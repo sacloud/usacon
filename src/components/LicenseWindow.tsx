@@ -38,7 +38,6 @@ const LicenseWindow: React.FC<LicenseWindowProps> = (props) => {
     <Dialog
       open={props.open}
       onClose={() => props.onClose?.()}
-      onBackdropClick={() => props.onClose?.()}
       scroll="paper"
       fullWidth={true}
       maxWidth="lg"
@@ -47,8 +46,11 @@ const LicenseWindow: React.FC<LicenseWindowProps> = (props) => {
     >
       <DialogTitle id="alert-dialog-title">Open source licenses</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          <pre>{licenses}</pre>
+        <DialogContentText
+          id="alert-dialog-description"
+          style={{ whiteSpace: "pre-line" }}
+        >
+          {licenses}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
