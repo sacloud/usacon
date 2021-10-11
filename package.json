@@ -43,11 +43,9 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "watch": "webpack --watch --config webpack.config.js --info-verbosity verbose",
+    "watch": "webpack --watch --config webpack.config.js --progress",
     "build:production": "webpack --config webpack.prod.js",
-    "watch:production": "webpack --watch --config webpack.prod.js --info-verbosity verbose",
-    "start": "webpack-cli serve --open --config webpack.config.js",
-    "start:main": "webpack-cli serve --open --config webpack.config.js",
+    "watch:production": "webpack --watch --config webpack.prod.js --progress",
     "format": "prettier --write '{src,test}/**/*.{ts,tsx,js,jsx}'",
     "test": "jest"
   },
@@ -87,6 +85,6 @@
     "source-map-support": "^0.5.19",
     "style-loader": "^1.2.1",
     "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^4.3.1"
   }
 }

@@ -1,5 +1,5 @@
 AUTHOR          ?="The UsaCon Authors"
-COPYRIGHT_YEAR  ?="2020"
+COPYRIGHT_YEAR  ?="2020-2021"
 COPYRIGHT_FILES ?=$$(find . \( -name "*.ts" -or -name "*.tsx" -or -name "*.js" -or -name "*.jsx" -or -name "*.css" -or -name "*.html" -or -name "*.go" \) -print | grep -v "/vendor/" | grep -v "/dist/" | grep -v "/node_modules" )
 
 default: build
@@ -15,17 +15,6 @@ release-build: set-license fmt
 .PHONY: watch
 watch: set-license fmt
 	yarn watch
-
-.PHONY: start
-start: set-license fmt start-main
-
-.PHONY: start-main
-start-main: set-license fmt
-	yarn start
-
-.PHONY: start-popup
-start-popup: set-license fmt
-	yarn start:popup
 
 .PHONY: test
 test: set-license fmt
