@@ -67,12 +67,6 @@ module.exports = {
     },
 
     devtool: "inline-source-map",
-    devServer: {
-        contentBase: `${__dirname}/dist`,
-        watchContentBase: true,
-        open: "Google Chrome",
-        openPage:"local-test.html"
-    },
     plugins: [
         new CopyPlugin({
             patterns: [
