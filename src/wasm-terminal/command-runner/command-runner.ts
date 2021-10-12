@@ -89,15 +89,18 @@ export default class CommandRunner {
       }
 
       // Translate our AST into Command Options
-      this.commandOptionsForProcessesToRun = await this._getCommandOptionsFromAST(
-        commandAst[0],
-        this.wasmTerminalConfig,
-        this.wasmTty
-      );
+      this.commandOptionsForProcessesToRun =
+        await this._getCommandOptionsFromAST(
+          commandAst[0],
+          this.wasmTerminalConfig,
+          this.wasmTty
+        );
     } catch (c) {
       if (this.wasmTty) {
         this.wasmTty.print("\r\n");
-        this.wasmTty.print(`${c.toString()}\r\n`);
+        if (c instanceof Object) {
+          this.wasmTty.print(`${c.toString()}\r\n`);
+        }
       }
       console.error("wasm shell: parse error", c);
       this.commandEndCallback();
@@ -139,8 +142,8 @@ export default class CommandRunner {
       return;
     }
 
-    const sharedStdin = this.spawnedProcessObjects[processObjectIndex]
-      .sharedStdin;
+    const sharedStdin =
+      this.spawnedProcessObjects[processObjectIndex].sharedStdin;
     let startingIndex = 1;
     if (sharedStdin[0] > 0) {
       startingIndex = sharedStdin[0];
@@ -443,9 +446,9 @@ export default class CommandRunner {
     let commandArgs = ast.args.map((arg: any) => arg.value);
     let args = [commandName, ...commandArgs];
 
-    const envEntries = Object.entries(
-      ast.env
-    ).map(([key, value]: [string, any]) => [key, value.value]);
+    const envEntries = Object.entries(ast.env).map(
+      ([key, value]: [string, any]) => [key, value.value]
+    );
     let env: any = {};
 
     // Manually doing Object.fromEntries for compatibility with Node 10

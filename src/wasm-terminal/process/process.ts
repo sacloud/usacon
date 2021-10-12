@@ -164,7 +164,7 @@ export default class Process {
       }
       await this.command.run(this.wasmFs);
       end();
-    } catch (e) {
+    } catch (e: any) {
       if (e instanceof WASIExitError) {
         const exitCode = e.code;
         end();
