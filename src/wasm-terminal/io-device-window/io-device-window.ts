@@ -325,7 +325,8 @@ export default class IoDeviceWindow {
       return undefined;
     }
 
-    const popupCanvasBoundingClientRect = this.popupCanvas.getBoundingClientRect();
+    const popupCanvasBoundingClientRect =
+      this.popupCanvas.getBoundingClientRect();
     const minX = popupCanvasBoundingClientRect.x;
     const maxX =
       popupCanvasBoundingClientRect.x + popupCanvasBoundingClientRect.width;

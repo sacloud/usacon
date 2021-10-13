@@ -145,7 +145,7 @@ export function collectAutocompleteCandidates(
   // Collect all auto-complete candidates from the callbacks
   const all = callbacks.reduce((candidates, fn) => {
     try {
-      let v = fn(index, (tokens as any) as string[]);
+      let v = fn(index, tokens as any as string[]);
       return candidates.concat(v as never[]);
     } catch (e) {
       console.error("Auto-complete error:", e);

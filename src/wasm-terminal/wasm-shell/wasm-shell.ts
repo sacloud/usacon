@@ -110,7 +110,9 @@ export default class WasmShell {
       this.commandRunner = this.getCommandRunner(line);
       await this.commandRunner.runCommand();
     } catch (e) {
-      this.wasmTty.println(`${e.toString()}`);
+      if (e instanceof Object) {
+        this.wasmTty.println(`${e.toString()}`);
+      }
       // tslint:disable-next-line
       this.prompt();
     }

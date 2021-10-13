@@ -135,14 +135,14 @@ export const BuiltinCommands: CommandDef[] = [
     type: "Callback",
     name: "#",
     callback: (args: string[], wasmFs: WasmFs): Promise<string> => {
-      return new Promise<string>((resolve) => resolve());
+      return new Promise<string>((resolve) => resolve(""));
     },
   }),
   new CommandDef({
     type: "Callback",
     name: ":",
     callback: (args: string[], wasmFs: WasmFs): Promise<string> => {
-      return new Promise<string>((resolve) => resolve());
+      return new Promise<string>((resolve) => resolve(""));
     },
   }),
 ];

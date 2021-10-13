@@ -16,6 +16,7 @@
  */
 
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
     mode: "production",
@@ -48,14 +49,17 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".json", ".css"]
+        extensions: [".ts", ".tsx", ".js", ".json", ".css"],
+        fallback: {
+            util: require.resolve("util"),
+            crypto: require.resolve("crypto-browserify"),
+            stream: require.resolve("stream-browserify"),
+        }
     },
-    stats: {
-        warningsFilter: [
-            'Critical dependency: require function is used in a way in which dependencies cannot be statically extracted',
-            'Failed to parse source map',
-        ]
-    },
+    ignoreWarnings: [
+        /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/,
+        /Failed to parse source map/,
+    ],
     performance: {
         maxAssetSize: 30*1024*1024,
         maxEntrypointSize: 1*1024*1024,
@@ -66,5 +70,8 @@ module.exports = {
                 {from: 'public', to: './'}
             ],
         }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        })
     ],
 };
