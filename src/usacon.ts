@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 The UsaCon Authors
+ * Copyright (c) 2020-2022 The UsaCon Authors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -36,7 +36,7 @@ const usaconBanner = `==========================================================
 \x1B[3m\x1B[1;34mhttps://www.gnu.org/licenses/\x1B[0m
 
 \x1B[3m\x1B[37m
-Copyright (c) 2020 The UsaCon Authors\x1B[0m
+Copyright (c) 2020-2022 The UsaCon Authors\x1B[0m
 =============================================================================`;
 
 export class Usacon {

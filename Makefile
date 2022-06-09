@@ -1,5 +1,5 @@
 AUTHOR          ?="The UsaCon Authors"
-COPYRIGHT_YEAR  ?="2020-2021"
+COPYRIGHT_YEAR  ?="2020-2022"
 COPYRIGHT_FILES ?=$$(find . \( -name "*.ts" -or -name "*.tsx" -or -name "*.js" -or -name "*.jsx" -or -name "*.css" -or -name "*.html" -or -name "*.go" \) -print | grep -v "/vendor/" | grep -v "/dist/" | grep -v "/node_modules" )
 
 default: build
