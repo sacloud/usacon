@@ -37,3 +37,6 @@ fmt:
 set-license:
 	@addlicense -c $(AUTHOR) -y $(COPYRIGHT_YEAR) $(COPYRIGHT_FILES)
 
+zip: release-build
+	(cd dist; zip ../usacon.zip ./*)
+
