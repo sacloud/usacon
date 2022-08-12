@@ -1,7 +1,7 @@
 {
   "name": "UsaCon",
   "manifest_version": 2,
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A browser extension for using SakuraCloud CLI in the control panel",
   "icons": {
     "128": "icon_128.png"
