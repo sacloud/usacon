@@ -1,5 +1,7 @@
 # UsaCon 
 
+**:warning: UsaConは2022/09/29に公開を停止します。**
+
 A browser extension for using SakuraCloud CLI in the control panel.
 
 [さくらのクラウド](https://cloud.sakura.ad.jp)のコントロールパネル上でCLIである[Usacloud](https://github.com/sacloud/usacloud)を
@@ -7,6 +9,7 @@ A browser extension for using SakuraCloud CLI in the control panel.
 WebAssemblyを利用しており別途サーバを必要とせずにブラウザだけでUsacloudコマンドが実行可能になります。
 
 ![UsaCon Overview](images/overview.png)
+
 
 ## Install
 
