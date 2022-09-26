@@ -1,6 +1,6 @@
 # UsaCon 
 
-**:warning: UsaConは2022/09/29に公開を停止します。**
+**:warning: UsaConは2022/09/29に公開を停止しました。**
 
 A browser extension for using SakuraCloud CLI in the control panel.
 
